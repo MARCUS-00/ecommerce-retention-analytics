@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: analyst
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: olist
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: olist
+      DB_USER: analyst
+      DB_PASSWORD: ci_password
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate synthetic fixtures (no Kaggle credentials needed)
+        run: python tests/fixtures/generate_fixtures.py data/raw
+
+      - name: Run pipeline against fixtures
+        run: python -m src.run_pipeline
+
+      - name: Run tests
+        run: python -m pytest -q

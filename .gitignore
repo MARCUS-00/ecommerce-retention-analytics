@@ -1,0 +1,20 @@
+# Environment / secrets
+.env
+kaggle.json
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (raw is fetched by src/ingest.py; never committed)
+data/raw/
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: olist_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      # md5, not the postgres:16 default scram-sha-256: some BI tool drivers (observed with
+      # Power BI Desktop's Npgsql-based PostgreSQL connector) fail to negotiate SCRAM auth
+      # and reject valid credentials with a generic "couldn't authenticate" error. md5 is
+      # broadly compatible and, for this local-only dev database, an acceptable tradeoff.
+      POSTGRES_INITDB_ARGS: "--auth-host=md5"
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - olist_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  olist_pg_data:

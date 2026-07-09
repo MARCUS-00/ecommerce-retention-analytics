@@ -1,0 +1,3 @@
+is_late,reviewed_orders,avg_review_score,median_review_score,pct_1_2_star
+False,88163,4.29,5.0,9.22
+True,7661,2.57,2.0,54.07
