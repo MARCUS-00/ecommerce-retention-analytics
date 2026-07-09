@@ -8,9 +8,11 @@
 An end-to-end analytics build on the Olist Brazilian e-commerce dataset (~100K orders, 9
 relational tables): a PostgreSQL staging-plus-star-schema warehouse, a validated and idempotent
 Python ETL pipeline, 18 business-question SQL analyses, a statistically tested operational
-insight, and a 28-day demand forecast with walk-forward validation. Headline finding: late
-deliveries are associated with a materially and significantly lower review score (median 2/5
-vs. 5/5 on-time, Mann-Whitney U p ≈ 0) - full results in `docs/findings.md`.
+insight, and a 28-day demand forecast with walk-forward validation.
+
+**Headline finding:** late deliveries are associated with a materially and significantly lower
+review score (median 2/5 vs. 5/5 on-time, Mann-Whitney U p ≈ 0) — full results in
+`docs/findings.md`.
 
 ## Dashboard
 
@@ -33,20 +35,23 @@ has three questions ahead of annual planning:
 
 ## Architecture & key decisions
 
-```
-Kaggle CSVs (data/raw, gitignored)
-      | src/ingest.py - loads verbatim, no cleaning
-      v
-stg.* (raw mirror, all TEXT)
-      | src/validate.py - INPUT checks (blocking + logged)
-      | sql/02_transform/*.sql - typed, deduplicated, derived columns
-      v
-analytics.* (star schema) - facts, dims, typed reviews/payments
-      | src/validate.py - OUTPUT checks: reconcile counts, orphan FKs, revenue tie-out
-      +--> sql/03_analysis/ - 18 business queries
-      +--> notebooks/01-03 - EDA, cohorts/RFM, statistical test
-      +--> notebooks/04 - forecast -> analytics.forecast_28d
-      +--> sql/04_dashboard_views/ -> Power BI (4 pages) -> executive memo
+```mermaid
+flowchart TD
+    A["Kaggle CSVs<br/>(data/raw, gitignored)"] -->|"src/ingest.py<br/>loads verbatim"| B["stg.*<br/>raw mirror, all TEXT"]
+    B -->|"src/validate.py<br/>INPUT checks"| C{"Blocking<br/>failures?"}
+    C -->|yes| X["Pipeline halts"]
+    C -->|no| D["sql/02_transform/*.sql<br/>typed, deduplicated, derived"]
+    D --> E["analytics.*<br/>star schema"]
+    E -->|"src/validate.py<br/>OUTPUT checks"| F["reconciled: counts,<br/>orphan FKs, revenue tie-out"]
+    E --> G["sql/03_analysis/<br/>18 business queries"]
+    E --> H["notebooks 01-03<br/>EDA, cohorts/RFM, stats test"]
+    E --> I["notebook 04<br/>forecast"]
+    I --> J["analytics.forecast_28d"]
+    E --> K["sql/04_dashboard_views/"]
+    K --> L["Power BI<br/>4 pages"]
+    J --> L
+    G --> M["executive memo"]
+    H --> M
 ```
 
 Full detail in `docs/architecture.md`. Three decisions worth knowing before reading any query:
@@ -101,7 +106,7 @@ make pipeline        # ingest -> validate -> transform -> validate
 Then `make test` (pytest), `make analysis` (the 18 SQL business-question queries, saved to
 `sql/03_analysis/outputs/`), `make notebooks` (EDA, cohorts/RFM, stats test, forecast),
 `make views` (Power BI feeding views), and `make excel` (the pivot summary workbook). Full
-clean-room rebuild: `make clean && make db-up && make pipeline && pytest -q && make notebooks`.
+clean-room rebuild: `make clean && make db-up && make pipeline && make test && make notebooks`.
 
 Full step-by-step walkthrough (prerequisites, Kaggle setup, dashboard build, troubleshooting):
 `docs/PLAYBOOK.md`.
