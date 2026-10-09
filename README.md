@@ -21,11 +21,13 @@ Executive Overview, Sales Deep-Dive, Customers & Retention, and Operations & Sat
 
 - `dashboard/ecommerce_retention_dashboard_final.pbix` is the one final report. Superseded copies
   and PBIP exports are kept locally in `dashboard/archive/` (see its README) and are not tracked.
-- `dashboard/screenshots/` holds one screenshot per page.
+- `dashboard/screenshots/` holds one screenshot per page, cropped to the report canvas.
 - `dashboard/DAX_MEASURES_FINAL.md` lists the 43 measures, and `dashboard/BUILD_QA_REPORT.md`
   records the checks, the decisions and the known limitations.
 - `dashboard/BUILD_SPEC.md` and `dashboard/dax_measures.md` are the original specification and
   are kept for reference.
+
+![Executive Overview page](dashboard/screenshots/page1_executive_overview.jpg)
 
 The report imports from a local PostgreSQL database, so a refresh needs the Docker container
 running and the database password entered in Power BI.

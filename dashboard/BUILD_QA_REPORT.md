@@ -16,7 +16,7 @@ All files are in `D:\PROGRAMING\Data Analytics\ecommerce retention analytics\cod
 | `ecommerce_retention_dashboard_final.pbix` | Authoritative report. 24,195,620 bytes. SHA-256 `3361bc56936996c912274accf7997f527702e6b280161a8e260aa7d8c6c32f20` |
 | `BUILD_QA_REPORT.md` | This report |
 | `DAX_MEASURES_FINAL.md` | Final list of the 43 measures and the calculated column |
-| `screenshots\page1_executive_overview.jpg`, `page2_sales_deep_dive.jpg`, `page3_customers_retention.jpg`, `page4_operations_satisfaction.jpg` | Screenshots of the final file (see Limitations, item 9) |
+| `screenshots\page1_executive_overview.jpg`, `page2_sales_deep_dive.jpg`, `page3_customers_retention.jpg`, `page4_operations_satisfaction.jpg` | Screenshots of the final file, cropped to the report canvas (see Limitations, item 9) |
 | `BUILD_SPEC.md`, `dax_measures.md`, `exec_summary.xlsx` | Original project files, unchanged |
 
 Superseded files are kept locally in `archive\` (ignored by Git, described in `archive\README.md`): the pre-polish backup `.pbix` (SHA-256 `8adaca54710ac82347597202ae83ad9c8e826b4525b288827da17ad9550f91db`), an older PBIP development project, a PBIP export of the final report, and the PBIP work copy used for the polish edits. None of them has been checked against the final report, and they are not part of the deliverable. A byte-identical duplicate of the final `.pbix` that used to sit next to it was removed in the release cleanup.
@@ -29,7 +29,7 @@ This audit worked from the files on disk and the raw data, not from earlier repo
 - The saved final file was opened from disk in Power BI Desktop. All four pages rendered without errors or dialogs. Page 4 shows "p < 0.001" and the forecast note. Power BI was closed with "Don't save", and the file hash was unchanged afterwards.
 - The Mann–Whitney test was re-run from the raw CSV files with pandas and SciPy 1.15.3 (see "p-value note").
 - These figures were recomputed from `data/raw` and `data/processed`: 96,478 delivered orders; 96,470 of them with a delivery date; 7,826 late orders (8.11 % of 96,470); 93,358 customers by `customer_unique_id`, of whom 2,801 are repeat customers (3.00 %); a 28-day forecast total of 6,660 (sum of daily lower bounds 3,585, sum of daily upper bounds 9,943); 8 delivered orders without a delivery date, all 8 with a review.
-- Page 4 is the only page that changed in the last edit. Its screenshot (taken after the 2:18 PM save) matches the live file.
+- Page 4 is the only page that changed in the last edit. Its screenshot matches the live file.
 
 **Not done in the audit**
 - No new PostgreSQL refresh was run, because the audit made no model change. The last refresh is the one before the 2:18 PM save.
@@ -123,7 +123,7 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 6. Digit grouping is stored per file (English US). The model's format strings still apply on a machine with other regional settings, but this was verified only on the author's machine.
 7. Accessibility is partial. Alt text, reading-order tab order and non-colour cues (data labels, dashed against solid lines) are in place. Not done: a formal contrast measurement of every colour pair (the lightest grey text, #6B7280 on near-white, is believed to be at least 4.5:1 but was not measured), a screen-reader walk-through and a high-contrast theme test.
 8. The page 4 reviewed-orders table is tight, and a thin scrollbar can appear. All five columns and all four rows, including Unknown, are visible. The page 4 cards are compact.
-9. The screenshots include the Power BI Desktop window and side panes. The page 1–3 screenshots were taken at about 2:05 PM and their title bar still reads "Last saved 2:04 pm". Their content matches the final file, because the 2:18 PM save changed only page 4 wording. The page 4 screenshot was taken after that save.
+9. The screenshots are cropped to the report canvas (968 × 608 px); the Power BI Desktop window, side panes and taskbar were removed. The page 1–3 screenshots were captured before the last save, which changed only page 4 wording, so their content matches the final file. Pages 2 and 3 were captured at reduced zoom and are lower in resolution. The uncropped originals are kept locally in `archive\screenshots_original\`.
 10. Pages 2 and 3 use custom page heights (960 and 900). The limit of six analytic visuals per page excludes KPI cards, slicers and text boxes.
 11. A saved DAX query tab ("Query 1", the reference-check query) remains in the model. It is harmless.
 

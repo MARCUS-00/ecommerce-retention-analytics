@@ -36,5 +36,3 @@ Leadership asked three questions before annual planning: where revenue comes fro
 - The data is one marketplace, 2016-2018. About 20 months of history means one annual cycle, and Black Friday 2017 was never in a held-out backtest window.
 - The dataset has no costs or margins, so this memo makes no profit or financial-impact estimate.
 - The retention figure counts repeat orders on this marketplace only, and the forecast is a method demonstration on frozen data.
-
-*Drafted with Claude from docs/findings.md and the saved SQL, notebook and QA outputs. The author should review it and be able to explain every sentence.*

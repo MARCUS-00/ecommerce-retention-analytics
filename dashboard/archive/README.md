@@ -12,6 +12,7 @@ local disk for rollback and history, and none of them has been checked against t
 | `ecommerce_retention_dashboard_final_BACKUP_pre_polish.pbix` | The report as it was before the final polish pass. SHA-256 `8adaca54710ac82347597202ae83ad9c8e826b4525b288827da17ad9550f91db` | Rollback copy only |
 | `pbip_ecommerce_analytics_old/` | An early Power BI Project (PBIP) development copy that predates the final fixes | Obsolete |
 | `pbip_final_export/` | A PBIP export made from the final report (its own README says "post-polish source") | Not verified against the final .pbix |
+| `screenshots_original/` | The four page screenshots as first captured, with the full Power BI Desktop window (ribbon, side panes, taskbar). Replaced by cropped versions in `../screenshots/` | Superseded |
 | `pbip_work_copy/` | The temporary PBIP working copy used to apply the polish edits (it includes the alt-text edits) | Not verified against the final .pbix |
 
 Notes

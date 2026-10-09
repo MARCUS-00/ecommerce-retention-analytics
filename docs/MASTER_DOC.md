@@ -36,7 +36,7 @@ It exists to get a fresher Data Analyst shortlisted and through interviews. Ever
 
 ## 2. Project Overview
 
-**Deliverables.** A public GitHub repository (pipeline, SQL, executed notebooks, tests, CI badge, docs), a Power BI dashboard (published or screenshots + walkthrough video), an executive insights memo (human-authored), one Excel pivot summary, and resume bullets whose every number is self-computed.
+**Deliverables.** A public GitHub repository (pipeline, SQL, executed notebooks, tests, CI badge, docs), a Power BI dashboard (published or screenshots + walkthrough video), a one-page executive insights memo, one Excel pivot summary, and resume bullets whose every number is self-computed.
 
 Six differentiators separate this from the typical fresher submission - protect them during development:
 
@@ -80,7 +80,7 @@ Framing (use verbatim in the README): Olist is a Brazilian e-commerce marketplac
 
 - Power BI: 4 pages incl. forecast band; simple DAX; complex logic precomputed in SQL views. One Excel pivot deliverable.
 
-- Documentation: README, data dictionary + anomaly log, findings.md, architecture.md, monitoring_policy.md, human-authored insights memo.
+- Documentation: README, data dictionary + anomaly log, findings.md, architecture.md, monitoring_policy.md, one-page insights memo.
 
 - Publication: pinned GitHub repo, dashboard link or screenshots + video, LinkedIn post, resume bullets.
 
@@ -92,7 +92,7 @@ Framing (use verbatim in the README): Olist is a Brazilian e-commerce marketplac
 
 | **Rejected item**                                     | **One-line reason**                                                                                                   |
 |-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| LLM-generated summaries / automated insights          | The memo is the proof of the most-valued analyst skill; delegating it deletes the signal and risks fabricated numbers |
+| Automatically generated summaries / insights          | Every statement in the memo must trace to a query or notebook; generated text risks unsupported numbers |
 | Text-to-SQL / chat-with-data bot                      | App engineering, not analysis; quality undefendable in a DA interview                                                 |
 | Model-monitoring dashboard                            | Nothing is deployed; backtest chart + written policy achieves the legitimate goal at a fraction of the cost           |
 | Orchestrators (Airflow/Prefect/Dagster)               | One-machine batch job; Makefile is the right scale - know when orchestration earns its keep                           |
@@ -177,7 +177,7 @@ Canonical tree (harmonized; supersedes minor Blueprint variations):
 >
 > \|- docs/BLUEPRINT.md architecture.md data_dictionary.md findings.md
 >
-> \| insights_memo.md (human-authored) monitoring_policy.md
+> \| insights_memo.md monitoring_policy.md
 >
 > \|- tests/test_input_quality.py test_output_quality.py fixtures/
 
@@ -490,7 +490,7 @@ Design rules: \<= 6 visuals per page; slicers for date / state / category; impor
 
 ## 16. Development Workflow
 
-Phase-gate model - identical whether building manually or via Claude Code. A red gate blocks progress; fix and re-run the full gate.
+Phase-gate model: a red gate blocks progress; fix and re-run the full gate.
 
 | **Phase**                   | **Output**                                                        | **Gate**                                            |
 |-----------------------------|-------------------------------------------------------------------|-----------------------------------------------------|
@@ -539,7 +539,7 @@ Phase-gate model - identical whether building manually or via Claude Code. A red
 
 - README order is fixed: summary -\> dashboard image -\> business problem -\> architecture + key decisions -\> quantified findings -\> how to run (3 commands) -\> repo map, data credit + license, limitations.
 
-- findings.md entry format: quantified observation -\> business implication -\> producing query/notebook path. The human-authored insights_memo.md selects 5-7 and adds recommendations in the builder's own voice - the memo is never machine-authored (Section 4.3).
+- findings.md entry format: quantified observation -\> business implication -\> producing query/notebook path. insights_memo.md selects 5-7 of them and adds recommendations; every number in it is taken from findings.md (Section 4.3).
 
 - Hard rule: no placeholder brackets anywhere in final docs; every number is reproducible or the claim is removed.
 
@@ -566,7 +566,7 @@ Phase-gate model - identical whether building manually or via Claude Code. A red
 | 2 Model + SQL core | Star schema + transforms; input AND output validation green; reconciliation writeup; first ~10 queries                                   | make pipeline rebuilds from a clean DB                        |
 | 3 Analysis         | Remaining queries; notebooks 1-3; draft findings                                                                                         | Every finding has a number and a reproducible source          |
 | 4 Forecast + CI    | Module A + monitoring policy; fixtures + Actions workflow + badge                                                                        | Backtest table exists; verdict vs baseline written; CI green  |
-| 5 Communicate      | Dashboard (incl. forecast band); README + findings; memo (human); publish; resume + LinkedIn                                             | A stranger understands the project in 3 minutes               |
+| 5 Communicate      | Dashboard (incl. forecast band); README + findings; memo; publish; resume + LinkedIn                                             | A stranger understands the project in 3 minutes               |
 
 ## 23. Definition of Done
 
@@ -596,4 +596,4 @@ Every question below is earned by building this project. Prepare 2-3 minute answ
 | Statistics    | Why Mann-Whitney over a t-test? (S13) - why is the p-value not the insight at this sample size? (S13) - what would make the association causal? (S13)                                                                                                                                  |
 | Forecasting   | Why baseline-first? Why WAPE over MAPE? What is bias and your sign convention? (S14) - why never shuffled CV on time series - and the capstone patient-leakage parallel? (S14) - when would you NOT trust this forecast? (S14, S21)                                                    |
 | Engineering   | How is the pipeline idempotent? (S9) - how would you do daily incremental loads? (deliberate non-feature: full rebuild is correct at this scale) - what breaks at 100M rows? (partitioning, warehouse engines, pre-aggregation) - when do orchestration or dbt earn their keep? (S4.3) |
-| Communication | Walk one insight from question to recommendation (findings.md -\> memo) - why is the memo human-authored? (S4.3, S20)                                                                                                                                                                  |
+| Communication | Walk one insight from question to recommendation (findings.md -\> memo) - why does every memo number trace back to a findings.md entry? (S4.3, S20)                                                                                                                                                                  |

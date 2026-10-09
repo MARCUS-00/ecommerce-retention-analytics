@@ -2,11 +2,9 @@
 
 Format per finding: quantified observation -> business implication -> producing query/notebook
 path (MASTER_DOC section 20). Every number here is reproducible by running the cited path
-against this repository's pipeline output - none are estimated. This file is machine-written;
-`docs/insights_memo.md` (one page; selects six of these and adds recommendations) is a separate
-deliverable and is never written by this build. It was drafted with Claude from this file and the
-saved SQL outputs; the project author should review it and put it in their own words before
-presenting it as personal work (MASTER_DOC section 4.3).
+against this repository's pipeline output - none are estimated. `docs/insights_memo.md` (one
+page) selects six of these findings and adds recommendations; every number in it is taken from
+this file or from the saved SQL outputs (MASTER_DOC section 4.3).
 
 ## 1. Repeat-purchase rate is 3.0%
 

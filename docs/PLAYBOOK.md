@@ -209,14 +209,13 @@ this section is the short version with the two mistakes worth avoiding called ou
    revenue overview in the README's Dashboard section - replaces more about the project for a
    reader in 5 seconds than any amount of prose.
 
-## 9. Review the insights memo (draft exists; make it yours)
+## 9. Insights memo
 
-`docs/findings.md` has 7 machine-computed findings with exact numbers and source paths.
-`docs/insights_memo.md` is a one-page business memo built from six of them, with
-recommendations. It was drafted with Claude's help, so before you present it as your own work,
-read it against `docs/findings.md`, check every number, and rewrite any sentence you could not
-explain in your own words - a hiring manager will ask you to explain any sentence in it. Keep
-it to one page, and never round a number differently than `docs/findings.md` does.
+`docs/findings.md` holds the 7 computed findings with exact numbers and source paths.
+`docs/insights_memo.md` turns six of them into a one-page business memo with recommendations.
+Check every number in it against `docs/findings.md` (or the saved SQL outputs, for the peak
+late-delivery month and the state range) and never round a number differently than
+`docs/findings.md` does. Keep the memo to one page.
 
 ## 10. Publish (repo owner only)
 

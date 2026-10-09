@@ -46,7 +46,7 @@ Every candidate ML feature was tested against seven criteria (real business prob
 | Repeat-purchase propensity classifier | **Rejected** | Severely imbalanced target + weak at-purchase features → misleading metrics; the *inferential* question (what drives repeat purchase) is already answered by the stats work |
 | Review sentiment NLP | **Rejected** | Reviews are Portuguese, and a labeled 1–5 score already exists — modeling sentiment adds zero decision value |
 | Deep learning (any) | **Rejected** | Nothing in this data justifies it; a red flag on an analyst resume |
-| LLM "chat with your data" bot | **Rejected for v1** | Engineering demo, not analysis; DA interviewers can't evaluate it and it dilutes the analyst story. Demonstrate AI literacy verbally (how you use AI tools *with verification*) instead. Fine as a separate later experiment |
+| LLM "chat with your data" bot | **Rejected for v1** | Engineering demo, not analysis; DA interviewers can't evaluate it and it dilutes the analyst story. Fine as a separate later experiment |
 
 **Three rules that keep the ML analyst-grade (state them in the README):**
 1. **Baseline first.** Every model is compared against a naive baseline; if it doesn't beat the baseline, that gets reported, not hidden.
