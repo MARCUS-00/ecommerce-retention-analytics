@@ -131,9 +131,9 @@ src/                    ingest, validate, transform, run_pipeline, run_analysis,
                         build_dashboard_views, build_excel_summary, utils
 notebooks/              01 EDA, 02 cohorts/RFM, 03 statistical test, 04 forecast
 tests/                  input/output data-quality suite + CI fixture generator
-dashboard/              final .pbix + copy, screenshots, QA report, DAX measure list,
+dashboard/              final .pbix, screenshots, QA report, DAX measure list,
                         original BUILD_SPEC.md / dax_measures.md, exec_summary.xlsx
-docs/                   architecture, data dictionary, findings, monitoring policy,
+docs/                   architecture, data dictionary, findings, insights memo, monitoring policy,
                         PLAYBOOK.md (full run-through), MASTER_DOC.md (design spec and planning
                         record, cited by section number; see its status note),
                         BLUEPRINT.md (archived and superseded: ML-scope rationale +
