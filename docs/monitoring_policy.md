@@ -21,6 +21,13 @@ within noise). Per the acceptance rule (MASTER_DOC section 14), the baseline its
 reported recommendation. This is a legitimate, stated outcome, not a failure to find a better
 model - see `notebooks/04_demand_forecast.ipynb` for the full backtest table and chart.
 
+## What the forecast bounds mean
+
+The `lower` and `upper` columns in `forecast_28d` are daily 95% bounds: the point forecast plus
+the 2.5th and 97.5th percentiles of 168 pooled backtest errors (6 folds x 28 days), with the
+lower bound floored at zero. The 28-day figures 3,585 and 9,943 are the sums of those daily
+bounds. They are not a prediction interval for the 28-day total, and should not be quoted as one.
+
 ## Refit cadence
 
 Refit (recompute the seasonal-naive reference week and re-run the walk-forward backtest)
@@ -31,12 +38,12 @@ more than one cycle.
 ## Investigation triggers
 
 Both thresholds are derived from this backtest's own fold-level spread (mean + 1 standard
-deviation across the 6 folds), not picked arbitrarily:
+deviation across the 6 folds, rounded to a convenient value), not picked arbitrarily:
 
 | Signal | Backtest mean | Backtest std | Investigate if... |
 |---|---|---|---|
 | Rolling WAPE | 0.231 | 0.110 | rolling WAPE > **0.34** |
-| \|bias\| | 27.8 (mean absolute) | 40.0 | \|bias\| > **70 orders/day** |
+| \|bias\| | 27.8 (mean absolute) | 40.0 (of the signed bias) | \|bias\| > **70 orders/day** (27.8 + 40.0 = 67.8, rounded up) |
 
 If either trigger fires: (1) re-run the walk-forward backtest on the latest data to see if the
 seasonal-naive-vs-Holt-Winters verdict has flipped: MASTER_DOC section 14's acceptance rule
@@ -49,10 +56,11 @@ a degraded forecast.
 ## Why no SARIMA / deployed monitoring dashboard
 
 - **SARIMA** was in scope as an option for proper prediction intervals (MASTER_DOC section 14
-  technique ladder, step 3), but the simplification escape hatch - Holt-Winters point forecasts
-  plus empirical intervals from walk-forward residual quantiles - was used instead, since
-  Holt-Winters didn't even beat the naive baseline; investing in SARIMA's residual-diagnostics
-  tuning for a model that loses to the simplest baseline would be complexity without evidence.
+  technique ladder, step 3), but the simplification escape hatch was used instead: a point
+  forecast plus empirical bounds from pooled walk-forward residual quantiles. The point forecast
+  is the seasonal-naive baseline, and its own backtest residuals set the bounds. Holt-Winters
+  did not beat the baseline, so investing in SARIMA's residual-diagnostics tuning would have
+  been complexity without evidence.
 - **A model-monitoring dashboard** is explicitly out of scope (MASTER_DOC section 4.3's rejected
   register): nothing is deployed, so there is nothing to monitor live. This document plus the
   backtest chart in the notebook achieves the legitimate goal (a documented plan for what to

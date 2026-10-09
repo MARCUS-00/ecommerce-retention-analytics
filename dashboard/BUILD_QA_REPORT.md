@@ -38,7 +38,7 @@ This audit worked from the files on disk and the raw data, not from earlier repo
 
 **Not done in the audit**
 - No new PostgreSQL refresh was run, because the audit made no model change. The last refresh is the one before the 2:18 PM save.
-- The notebooks themselves were not re-executed. The test and the figures above were reproduced independently from the CSV files.
+- The notebooks themselves were not re-executed. The test and the figures above were reproduced independently from the CSV files. Wording edits made afterwards to notebooks 03 and 04 (see the documentation-correction note below) were also not re-executed against PostgreSQL.
 - The DAX measures were not re-run in the live model during the audit. The values on the pages match the recomputed figures above.
 
 ## The 8-order discrepancy
@@ -81,7 +81,7 @@ That printed zero is **floating-point underflow, not a probability of exactly ze
 
 At |z| of 80 or more, the one-sided p-value is far below 0.001 under any reasonable method. A normal approximation is not reliable far into the tail, so no tail probability is reported. The effect size, not the p-value, is the useful result at this sample size.
 
-The notebook's own printed text says "p-value is effectively 0". That notebook output was left unchanged.
+The notebook's original printed text said "p-value is effectively 0". In the documentation-correction pass, notebook 03's explanatory markdown and its printed p-value line were reworded to say p < 0.001 and to explain the underflow. The calculation and the statistical test are unchanged, and the stored output cell was edited by hand to match, not regenerated.
 
 ## Reference validation
 Checks against the live model (earlier passes) and against the raw data (this audit). The reference values were used only as checks and are not stored in the model.
@@ -121,7 +121,7 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 
 ## Limitations
 1. Revenue MoM % for December 2016 is blank in DAX because there is no prior month, whereas SQL query 01 uses LAG across the gap. The chart axis is capped and says so. The AOV and late-rate charts still show a spike or dip in the late-2016 months, which have only a handful of orders. The subtitles flag this.
-2. The 28-day lower and upper cards (3,585 and 9,943) are sums of the daily 95 % bounds. They are **not** a 28-day prediction interval, and the page 4 note says so. Notebook 04 prints the same sums as a "95% interval". That notebook output was left unchanged.
+2. The 28-day lower and upper cards (3,585 and 9,943) are sums of the daily 95 % bounds. They are **not** a 28-day prediction interval, and the page 4 note says so. Notebook 04 used to print the same sums as a "95% interval". Its print and log labels now read "sum of daily bounds ... (not a 28-day interval)" and a markdown cell explains the point. The forecast, the residual quantiles and the bounds themselves are unchanged, and the stored output cells were edited by hand, not regenerated.
 3. The Mann–Whitney statement on page 4 and the "roughly 97 % buy once" box on page 3 are static text, written from notebook 03 and the data at build time. They do not update on refresh.
 4. RFM segment names are derived in DAX from the SQL R×F grid using the notebook 02 rules. SQL `NTILE` places ties at quintile boundaries arbitrarily, so segment counts can differ slightly from notebook 02. Totals reconcile (93,358 customers, R$15,419,773.75).
 5. Repeat Customer Rate is all-time, and the payment visuals and forecast ignore the sales slicers. All three are labelled on the pages.
@@ -131,3 +131,6 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 9. The screenshots include the Power BI Desktop window and side panes. The page 1–3 screenshots were taken at about 2:05 PM and their title bar still reads "Last saved 2:04 pm". Their content matches the final file, because the 2:18 PM save changed only page 4 wording. The page 4 screenshot was taken after that save.
 10. Pages 2 and 3 use custom page heights (960 and 900). The limit of six analytic visuals per page excludes KPI cards, slicers and text boxes.
 11. A saved DAX query tab ("Query 1", the reference-check query) remains in the model. It is harmless.
+
+## Documentation-correction note
+A later documentation pass changed text only: the p-value and forecast-bound wording in notebooks 03 and 04, `docs/findings.md` (finding 7), `docs/monitoring_policy.md` and `docs/PLAYBOOK.md`. No SQL, Python module, measure, relationship, population or the `.pbix` was changed. Checks run in that pass: the Mann–Whitney test and the notebook 04 walk-forward backtest were rebuilt from the raw CSV files (seasonal-naive reproduced exactly; Holt-Winters came out at WAPE 0.2312 and bias +2.46 with the current library build, against the recorded 0.2310 and +2.44, so the recorded values are quoted); the edited notebooks were checked for valid JSON and for Python syntax. The notebooks were not re-executed against PostgreSQL and pytest was not run (no database was available).

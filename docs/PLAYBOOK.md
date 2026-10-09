@@ -151,7 +151,7 @@ real data, not a stale/partial run:
 |---|---|
 | `02_retention_rfm.ipynb` | repeat-purchase rate ≈ 3.0% |
 | `03_delivery_reviews.ipynb` | late orders: median review 2/5; on-time: median 5/5 |
-| `04_demand_forecast.ipynb` | 28-day forecast ≈ 6,660 orders (interval ≈ 3,585-9,943) |
+| `04_demand_forecast.ipynb` | 28-day forecast ≈ 6,660 orders (sum of daily bounds ≈ 3,585-9,943) |
 
 `04_demand_forecast.ipynb` also writes `analytics.forecast_28d` - required before the
 dashboard's forecast band will show anything.
@@ -163,7 +163,14 @@ make views    # analytics.vw_sales / vw_orders / vw_customers / vw_daily_orders
 make excel    # dashboard/exec_summary.xlsx - pivot-table summary for non-technical readers
 ```
 
-## 8. Build the Power BI dashboard (Windows, optional, human task)
+## 8. Build the Power BI dashboard (Windows, optional)
+
+**Status:** the dashboard is already built: `dashboard/ecommerce_retention_dashboard_final.pbix`
+(`ecommerce_retention_dashboard.pbix` is an identical copy). The final model has a few more
+tables than the six listed below (`order_payments`, `cohort_retention`, `rfm_grid`,
+`forecast_chart`) and extra measures; `dashboard/DAX_MEASURES_FINAL.md` and
+`dashboard/BUILD_QA_REPORT.md` describe it. The steps below are the short version for building a
+dashboard from the views again.
 
 Full detail in `dashboard/BUILD_SPEC.md` and the DAX formulas in `dashboard/dax_measures.md` -
 this section is the short version with the two mistakes worth avoiding called out explicitly.
@@ -194,7 +201,7 @@ this section is the short version with the two mistakes worth avoiding called ou
    question. Apply one consistent theme (View -> Themes) across all 4. (This playbook doesn't
    restate every visual from `BUILD_SPEC.md` page-by-page - it's the source of truth for that
    level of detail, this section is just the two mistakes worth avoiding.)
-7. Save as `dashboard/ecommerce_analytics.pbix`. If you hit an SSL-negotiation error while
+7. Save the report in `dashboard/`. If you hit an SSL-negotiation error while
    connecting (uncommon on a fresh setup - this project's Postgres already runs with `md5`
    auth for broad BI-tool compatibility, see `docker-compose.yml`), Advanced options -> SSL
    Mode -> disable is safe for this local-only database.
@@ -213,7 +220,7 @@ truth for every number; never round differently than it does.
 ## 10. Publish (repo owner only)
 
 ```bash
-git add dashboard/ecommerce_analytics.pbix dashboard/screenshots/ docs/insights_memo.md README.md
+git add dashboard/ docs/insights_memo.md README.md
 git commit -m "feat: add dashboard, screenshots, and insights memo"
 git push origin main
 ```

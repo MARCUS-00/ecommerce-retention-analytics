@@ -84,10 +84,14 @@ Holt-Winters (0.2310) - WAPE is effectively tied, so the simpler model is prefer
 acceptance rule. (Holt-Winters' bias, +2.44, is closer to zero than seasonal-naive's -10.14 -
 a point in the fancier model's favor that WAPE alone doesn't capture, but not enough on its own
 to overturn the tie on the headline metric.) The recommended 28-day forecast (2018-08-23 to
-2018-09-19) is 6,660 orders, 95% empirical interval 3,585-9,943.
+2018-09-19) is 6,660 orders. The daily 95% empirical bounds (the 2.5th and 97.5th percentiles of
+pooled backtest errors) sum to 3,585-9,943 over the 28 days; that sum is **not** a 28-day
+prediction interval, because adding daily bounds assumes the daily errors are perfectly
+correlated. Across the six backtest folds the 28-day totals missed by between -2,363 and +731
+orders (forecast minus actual), and six folds are too few to build a proper interval for a total.
 
 **Implication:** ops capacity planning should use the simple, auditable baseline - not a fancier
 model that adds complexity without evidence of better accuracy - and should treat the wide
-interval as a real signal of demand volatility, not a modeling weakness to hide.
+daily bounds as a real signal of demand volatility, not a modeling weakness to hide.
 
 **Source:** `notebooks/04_demand_forecast.ipynb`, `docs/monitoring_policy.md`.
