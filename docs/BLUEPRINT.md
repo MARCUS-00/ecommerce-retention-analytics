@@ -1,12 +1,17 @@
 # Portfolio Blueprint: E-Commerce Revenue & Customer Retention Analytics (archive extract)
 
-**Status: superseded.** `docs/MASTER_DOC.md` is the current, locked spec and covers everything
-this document originally did — business problem, architecture, tech stack, SQL queries, KPI
-contract, dashboard plan, and roadmap — in refined, final form. This file originally ran ~630
-lines; it has been trimmed to the two sections that were never absorbed into MASTER_DOC because
-they aren't build spec, they're reasoning and templates: the ML-scope evaluation (why demand
-forecasting was approved and churn/NLP/deep-learning were rejected) and the resume-bullet
-template. Section numbers below are kept as originally written for citation continuity.
+**Status: archived and superseded.** This is a planning record from before the build, kept for its
+historical reasoning, not as current guidance. `docs/MASTER_DOC.md` took over its design content (business
+problem, architecture, tech stack, SQL queries, KPI contract, dashboard plan, roadmap). The file was trimmed
+from about 630 lines to the two sections that are reasoning and templates rather than build spec: the
+ML-scope evaluation (why demand forecasting was approved and churn, NLP and deep learning were rejected) and
+the resume-bullet template. Section numbers are kept as originally written so existing citations still work.
+
+**Where the current information is:** what was built and measured is in `README.md`, `docs/findings.md`,
+`docs/architecture.md`, `docs/monitoring_policy.md` and `dashboard/BUILD_QA_REPORT.md`; how to run it is in
+`docs/PLAYBOOK.md`. The figures in section 15 below (`20+` queries, `[N]`, `[X]`, `[Y]`, `p < 0.05`) are
+planning-time template values, not results. The built project has 18 SQL queries and reports the
+Mann-Whitney result as p < 0.001 (see `docs/findings.md`).
 
 ---
 

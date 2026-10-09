@@ -134,8 +134,10 @@ tests/                  input/output data-quality suite + CI fixture generator
 dashboard/              final .pbix + copy, screenshots, QA report, DAX measure list,
                         original BUILD_SPEC.md / dax_measures.md, exec_summary.xlsx
 docs/                   architecture, data dictionary, findings, monitoring policy,
-                        PLAYBOOK.md (full run-through), MASTER_DOC.md (the governing spec),
-                        BLUEPRINT.md (trimmed archive: ML-scope rationale + resume template)
+                        PLAYBOOK.md (full run-through), MASTER_DOC.md (design spec and planning
+                        record, cited by section number; see its status note),
+                        BLUEPRINT.md (archived and superseded: ML-scope rationale +
+                        resume template)
 ```
 
 ## Data source & license

@@ -13,6 +13,17 @@ E-Commerce Revenue & Customer Retention Analytics
 | Target outcome          | Shortlist-grade fresher Data Analyst portfolio; interview-defensible end to end |
 | Estimated effort / cost | 5 weeks, ~60 hours / Rs. 0 (all tooling free)                                   |
 
+> **Status note (October 2026).** This is the design specification and planning record, written in July 2026
+> and not rewritten since. The code, notebooks and docs cite it by section number, so the numbering is frozen.
+> It describes the plan, including items that are not in the repository (the optional ladder such as K-Means, Streamlit and
+> dbt; the walkthrough video, LinkedIn post and any Publish-to-web step) and the plan-time dashboard design. For what
+> was actually built and measured, use `README.md`, `docs/findings.md`, `docs/architecture.md`,
+> `docs/monitoring_policy.md`, `docs/PLAYBOOK.md` and, for the finished Power BI report,
+> `dashboard/BUILD_QA_REPORT.md` and `dashboard/DAX_MEASURES_FINAL.md`. Where they disagree on status or results,
+> those documents win. Two known differences from the plan: the forecast bands are empirical daily bounds from pooled
+> backtest errors (SARIMA was skipped), and their sums are not a 28-day prediction interval; and the Mann-Whitney
+> result is reported as p < 0.001 (alpha = 0.05 below is the significance threshold, not the reported p-value).
+
 Contents
 
 *Note: in Word, right-click the table of contents and choose Update Field after opening.*

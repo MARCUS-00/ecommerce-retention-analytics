@@ -38,7 +38,7 @@ This audit worked from the files on disk and the raw data, not from earlier repo
 
 **Not done in the audit**
 - No new PostgreSQL refresh was run, because the audit made no model change. The last refresh is the one before the 2:18 PM save.
-- The notebooks themselves were not re-executed. The test and the figures above were reproduced independently from the CSV files. Wording edits made afterwards to notebooks 03 and 04 (see the documentation-correction note below) were also not re-executed against PostgreSQL.
+- The notebooks themselves were not re-executed. The test and the figures above were reproduced independently from the CSV files. Notebooks 03 and 04 were executed later, in the closure pass (see the closure note at the end of this report).
 - The DAX measures were not re-run in the live model during the audit. The values on the pages match the recomputed figures above.
 
 ## The 8-order discrepancy
@@ -74,14 +74,14 @@ That printed zero is **floating-point underflow, not a probability of exactly ze
 | Result | Source |
 |---|---|
 | n = 7,661 late, 88,163 on-time; U = 150,706,850.5; printed p = 0.000e+00 | Notebook 03 output (computed by the notebook) |
-| Same n and U; SciPy again returns p = 0.0 | Re-run in this audit from the raw CSV files, with the notebook's population rebuilt in pandas (delivered orders, latest review per order, lateness from the delivery and estimate dates). The notebook itself was not re-executed and the database was not queried |
+| Same n and U; SciPy again returns p = 0.0 | Re-run in this audit from the raw CSV files, with the notebook's population rebuilt in pandas (delivered orders, latest review per order, lateness from the delivery and estimate dates). At that point the notebook had not been re-executed and the database had not been queried; both were done in the closure pass (see the closure note at the end of this report) |
 | Normal approximation, mean U = 337,708,371.5. Without tie correction: SD ≈ 2,322,387.6, z ≈ −80.5 | Calculated from the printed n and U |
 | Normal approximation with tie correction (ratings are tied integers 1–5): SD ≈ 2,055,180.4, z ≈ −91.0 | Calculated in this audit from the re-run data |
 | Effect size: late orders score lower in 77.7 % of late/on-time pairs (ties counted half); rank-biserial correlation 0.55 | Calculated in this audit |
 
 At |z| of 80 or more, the one-sided p-value is far below 0.001 under any reasonable method. A normal approximation is not reliable far into the tail, so no tail probability is reported. The effect size, not the p-value, is the useful result at this sample size.
 
-The notebook's original printed text said "p-value is effectively 0". In the documentation-correction pass, notebook 03's explanatory markdown and its printed p-value line were reworded to say p < 0.001 and to explain the underflow. The calculation and the statistical test are unchanged, and the stored output cell was edited by hand to match, not regenerated.
+The notebook's original printed text said "p-value is effectively 0". In the documentation-correction pass, notebook 03's explanatory markdown and its printed p-value line were reworded to say p < 0.001 and to explain the underflow. The calculation and the statistical test are unchanged, and in the closure pass the notebook was executed in full against a rebuilt database, so its saved outputs now come from a real run.
 
 ## Reference validation
 Checks against the live model (earlier passes) and against the raw data (this audit). The reference values were used only as checks and are not stored in the model.
@@ -121,7 +121,7 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 
 ## Limitations
 1. Revenue MoM % for December 2016 is blank in DAX because there is no prior month, whereas SQL query 01 uses LAG across the gap. The chart axis is capped and says so. The AOV and late-rate charts still show a spike or dip in the late-2016 months, which have only a handful of orders. The subtitles flag this.
-2. The 28-day lower and upper cards (3,585 and 9,943) are sums of the daily 95 % bounds. They are **not** a 28-day prediction interval, and the page 4 note says so. Notebook 04 used to print the same sums as a "95% interval". Its print and log labels now read "sum of daily bounds ... (not a 28-day interval)" and a markdown cell explains the point. The forecast, the residual quantiles and the bounds themselves are unchanged, and the stored output cells were edited by hand, not regenerated.
+2. The 28-day lower and upper cards (3,585 and 9,943) are sums of the daily 95 % bounds. They are **not** a 28-day prediction interval, and the page 4 note says so. Notebook 04 used to print the same sums as a "95% interval". Its print and log labels now read "sum of daily bounds ... (not a 28-day interval)" and a markdown cell explains the point. The forecast, the residual quantiles and the bounds themselves are unchanged, and in the closure pass the notebook was executed in full against a rebuilt database, so its saved outputs now come from a real run.
 3. The Mann–Whitney statement on page 4 and the "roughly 97 % buy once" box on page 3 are static text, written from notebook 03 and the data at build time. They do not update on refresh.
 4. RFM segment names are derived in DAX from the SQL R×F grid using the notebook 02 rules. SQL `NTILE` places ties at quintile boundaries arbitrarily, so segment counts can differ slightly from notebook 02. Totals reconcile (93,358 customers, R$15,419,773.75).
 5. Repeat Customer Rate is all-time, and the payment visuals and forecast ignore the sales slicers. All three are labelled on the pages.
@@ -133,4 +133,14 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 11. A saved DAX query tab ("Query 1", the reference-check query) remains in the model. It is harmless.
 
 ## Documentation-correction note
-A later documentation pass changed text only: the p-value and forecast-bound wording in notebooks 03 and 04, `docs/findings.md` (finding 7), `docs/monitoring_policy.md` and `docs/PLAYBOOK.md`. No SQL, Python module, measure, relationship, population or the `.pbix` was changed. Checks run in that pass: the Mann–Whitney test and the notebook 04 walk-forward backtest were rebuilt from the raw CSV files (seasonal-naive reproduced exactly; Holt-Winters came out at WAPE 0.2312 and bias +2.46 with the current library build, against the recorded 0.2310 and +2.44, so the recorded values are quoted); the edited notebooks were checked for valid JSON and for Python syntax. The notebooks were not re-executed against PostgreSQL and pytest was not run (no database was available).
+A later documentation pass changed text only: the p-value and forecast-bound wording in notebooks 03 and 04, `docs/findings.md` (finding 7), `docs/monitoring_policy.md` and `docs/PLAYBOOK.md`. No SQL, Python module, measure, relationship, population or the `.pbix` was changed. Checks run in that pass: the Mann–Whitney test and the notebook 04 walk-forward backtest were rebuilt from the raw CSV files (seasonal-naive reproduced exactly; Holt-Winters came out at WAPE 0.2312 and bias +2.46 with the current library build, against the recorded 0.2310 and +2.44, so the recorded values are quoted); the edited notebooks were checked for valid JSON and for Python syntax.
+
+## Closure note
+A final closure pass checked the notebooks by running them.
+
+- **Environment:** a throwaway PostgreSQL 16.2 was created outside the repository, and the pipeline (`python -m src.run_pipeline`) was run on a copy of the repository against the raw CSV files. Ingest, input validation, transform and output validation all passed (0 blocking failures). The Python was 3.10.12 with the pinned library versions (pandas 2.2.3, SciPy 1.13.1, statsmodels 0.14.6), not the 3.12 used for the original build.
+- **Tests:** `pytest` ran against that database: 10 passed.
+- **Notebooks 03 and 04:** executed top to bottom without errors. Their source cells are identical to the committed ones, and the printed text outputs are identical to the previously saved ones, apart from log timestamps: n = 7,661 / 88,163, U = 150,706,850.5, the 54.07 % / 9.22 % shares, WAPE 0.2308 and 0.2310, bias -10.14 and +2.44, a forecast of 6,660 and summed daily bounds of 3,585-9,943. This time Holt-Winters reproduced exactly (the earlier pandas rebuild had differed by about 0.0002 in WAPE). The executed copies are the ones now committed, replacing outputs that had been edited by hand earlier in the documentation pass.
+- **Saved results:** `python -m src.run_analysis` regenerated all 18 SQL output files, and the executed notebook 04 regenerated `forecast_28d.csv`. All 19 files match the committed versions byte for byte once line endings are ignored.
+- **Derived figures quoted in the notebook text** (tie-corrected z of about -91, untied z of about -80.5, effect size 77.7 % and 0.55, residual quantiles -109.8 and +117.3, fold total misses from -2,363 to +731) were recomputed on the rebuilt database and match.
+- **Not covered:** the Power BI report was not refreshed or reopened in this pass, and nothing was run on the Windows machine or under Python 3.12. Notebooks 01 and 02 were not re-executed here.
