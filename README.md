@@ -11,15 +11,24 @@ Python ETL pipeline, 18 business-question SQL analyses, a statistically tested o
 insight, and a 28-day demand forecast with walk-forward validation.
 
 **Headline finding:** late deliveries are associated with a materially and significantly lower
-review score (median 2/5 vs. 5/5 on-time, Mann-Whitney U p ≈ 0) — full results in
+review score (median 2/5 vs. 5/5 on-time, Mann-Whitney U p < 0.001) — full results in
 `docs/findings.md`.
 
 ## Dashboard
 
-Not built yet - this repository produces the feeding views, DAX measures, and a full build
-specification (`dashboard/BUILD_SPEC.md`), never a stubbed `.pbix` (by design; see
-`docs/MASTER_DOC.md` section 4.3). A screenshot/walkthrough link goes here once a human builds
-the dashboard from that spec.
+The four-page Power BI dashboard is built from the feeding views in `sql/04_dashboard_views/`:
+Executive Overview, Sales Deep-Dive, Customers & Retention, and Operations & Satisfaction.
+
+- `dashboard/ecommerce_retention_dashboard_final.pbix` is the final report.
+  `dashboard/ecommerce_retention_dashboard.pbix` is an identical copy.
+- `dashboard/screenshots/` holds one screenshot per page.
+- `dashboard/DAX_MEASURES_FINAL.md` lists the 43 measures, and `dashboard/BUILD_QA_REPORT.md`
+  records the checks, the decisions and the known limitations.
+- `dashboard/BUILD_SPEC.md` and `dashboard/dax_measures.md` are the original specification and
+  are kept for reference.
+
+The report imports from a local PostgreSQL database, so a refresh needs the Docker container
+running and the database password entered in Power BI.
 
 ## Business problem
 
@@ -74,7 +83,7 @@ Full detail with source paths in `docs/findings.md`. Summary:
 1. Repeat-purchase rate is **3.0%** (2,801/93,358 customers) - this marketplace is
    acquisition-dependent, not retention-driven.
 2. Late deliveries: median review score **2/5** (54.1% are 1-2★) vs. **5/5** on-time (9.2% are
-   1-2★) - Mann-Whitney U, p ≈ 0.
+   1-2★) - Mann-Whitney U, p < 0.001.
 3. **8.11%** of delivered orders (7,826/96,478) arrive late.
 4. Top 5 of 74 categories generate **39.25%** of delivered revenue.
 5. Items-vs-payments reconciliation: **0.30%** of orders mismatch, fully explained (not an ETL
@@ -122,7 +131,8 @@ src/                    ingest, validate, transform, run_pipeline, run_analysis,
                         build_dashboard_views, build_excel_summary, utils
 notebooks/              01 EDA, 02 cohorts/RFM, 03 statistical test, 04 forecast
 tests/                  input/output data-quality suite + CI fixture generator
-dashboard/              BUILD_SPEC.md, dax_measures.md, exec_summary.xlsx (no .pbix - see above)
+dashboard/              final .pbix + copy, screenshots, QA report, DAX measure list,
+                        original BUILD_SPEC.md / dax_measures.md, exec_summary.xlsx
 docs/                   architecture, data dictionary, findings, monitoring policy,
                         PLAYBOOK.md (full run-through), MASTER_DOC.md (the governing spec),
                         BLUEPRINT.md (trimmed archive: ML-scope rationale + resume template)
@@ -142,5 +152,6 @@ repo's MIT license for the code.
 - Only ~20 months of history and one observed annual cycle inform the forecast; year-over-year
   seasonal effects (beyond the weekly cycle) aren't modeled with confidence
   (`docs/monitoring_policy.md`).
-- The dashboard is a build specification, not a built artifact, as of this commit - see
-  `dashboard/BUILD_SPEC.md`.
+- Some dashboard text (the Mann-Whitney statement and the "roughly 97% buy once" note) is static
+  and does not update on refresh; see `dashboard/BUILD_QA_REPORT.md` for the full list of
+  limitations.

@@ -22,7 +22,7 @@ retention curve is the finding, not a data gap.
 ## 2. Late deliveries are associated with significantly and materially lower review scores
 
 Late orders: median review score 2/5, 54.07% rated 1-2 stars (n=7,661). On-time orders: median
-5/5, 9.22% rated 1-2 stars (n=88,163). Mann-Whitney U, one-sided (late < on-time), p ≈ 0.
+5/5, 9.22% rated 1-2 stars (n=88,163). Mann-Whitney U, one-sided (late < on-time), p < 0.001.
 
 **Implication:** delivery reliability is a measurable lever on customer satisfaction, not just an
 operational metric in isolation - though this is an observational association, not proof of
