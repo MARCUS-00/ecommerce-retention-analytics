@@ -18,3 +18,7 @@ data/raw/
 # OS
 Thumbs.db
 .DS_Store
+
+# Local-only archive of superseded dashboard files (see dashboard/archive/README.md)
+dashboard/archive/*
+!dashboard/archive/README.md

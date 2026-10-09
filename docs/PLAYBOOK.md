@@ -166,7 +166,7 @@ make excel    # dashboard/exec_summary.xlsx - pivot-table summary for non-techni
 ## 8. Build the Power BI dashboard (Windows, optional)
 
 **Status:** the dashboard is already built: `dashboard/ecommerce_retention_dashboard_final.pbix`
-(`ecommerce_retention_dashboard.pbix` is an identical copy). The final model has a few more
+(it is the only current report file). The final model has a few more
 tables than the six listed below (`order_payments`, `cohort_retention`, `rfm_grid`,
 `forecast_chart`) and extra measures; `dashboard/DAX_MEASURES_FINAL.md` and
 `dashboard/BUILD_QA_REPORT.md` describe it. The steps below are the short version for building a

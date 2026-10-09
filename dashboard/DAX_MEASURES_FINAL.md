@@ -1,6 +1,6 @@
 # Final DAX measure list — ecommerce_analytics
 
-Source of truth: the `_Measures` table of the saved model (`ecommerce_retention_dashboard_final.pbix`; `ecommerce_retention_dashboard.pbix` is an identical copy). Reference values from the project documents are not stored in the model.
+Source of truth: the `_Measures` table of the saved model (`ecommerce_retention_dashboard_final.pbix`, the only current report file). Reference values from the project documents are not stored in the model.
 
 **Status after the final polish pass.** No measure, calculated column or relationship was changed (43 measures, unchanged). The pass changed presentation only:
 - The file's default format-string locale is now English (United States), so the existing format strings show `R$15,419,773.75`, `96,478` and `R$159.83` instead of Indian digit grouping.

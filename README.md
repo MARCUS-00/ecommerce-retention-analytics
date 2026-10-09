@@ -19,8 +19,8 @@ review score (median 2/5 vs. 5/5 on-time, Mann-Whitney U p < 0.001) — full res
 The four-page Power BI dashboard is built from the feeding views in `sql/04_dashboard_views/`:
 Executive Overview, Sales Deep-Dive, Customers & Retention, and Operations & Satisfaction.
 
-- `dashboard/ecommerce_retention_dashboard_final.pbix` is the final report.
-  `dashboard/ecommerce_retention_dashboard.pbix` is an identical copy.
+- `dashboard/ecommerce_retention_dashboard_final.pbix` is the one final report. Superseded copies
+  and PBIP exports are kept locally in `dashboard/archive/` (see its README) and are not tracked.
 - `dashboard/screenshots/` holds one screenshot per page.
 - `dashboard/DAX_MEASURES_FINAL.md` lists the 43 measures, and `dashboard/BUILD_QA_REPORT.md`
   records the checks, the decisions and the known limitations.

@@ -14,23 +14,18 @@ All files are in `D:\PROGRAMING\Data Analytics\ecommerce retention analytics\cod
 | File | Role |
 |---|---|
 | `ecommerce_retention_dashboard_final.pbix` | Authoritative report. 24,195,620 bytes. SHA-256 `3361bc56936996c912274accf7997f527702e6b280161a8e260aa7d8c6c32f20` |
-| `ecommerce_retention_dashboard.pbix` | Byte-identical copy of the file above (same SHA-256) |
 | `BUILD_QA_REPORT.md` | This report |
 | `DAX_MEASURES_FINAL.md` | Final list of the 43 measures and the calculated column |
 | `screenshots\page1_executive_overview.jpg`, `page2_sales_deep_dive.jpg`, `page3_customers_retention.jpg`, `page4_operations_satisfaction.jpg` | Screenshots of the final file (see Limitations, item 9) |
 | `BUILD_SPEC.md`, `dax_measures.md`, `exec_summary.xlsx` | Original project files, unchanged |
 
-Local working copies that are **not** part of the deliverable and are not committed to Git:
-- `ecommerce_retention_dashboard_final_BACKUP_pre_polish.pbix`: the file as it was before the polish pass (SHA-256 `8adaca54710ac82347597202ae83ad9c8e826b4525b288827da17ad9550f91db`), kept for rollback.
-- `ecommerce_analytics.pbip` with its `.Report` and `.SemanticModel` folders: an older development project that predates the final fixes.
-- `final_pbip\`: an earlier PBIP export of the report.
-- `..\pw\`: a temporary PBIP work folder used to apply the polish edits. It can be deleted.
+Superseded files are kept locally in `archive\` (ignored by Git, described in `archive\README.md`): the pre-polish backup `.pbix` (SHA-256 `8adaca54710ac82347597202ae83ad9c8e826b4525b288827da17ad9550f91db`), an older PBIP development project, a PBIP export of the final report, and the PBIP work copy used for the polish edits. None of them has been checked against the final report, and they are not part of the deliverable. A byte-identical duplicate of the final `.pbix` that used to sit next to it was removed in the release cleanup.
 
 ## Final pre-delivery audit
 This audit worked from the files on disk and the raw data, not from earlier reports.
 
 **Done**
-- Both PBIX files exist, are byte-identical (`cmp`), have the same SHA-256, and pass a zip integrity test. The package contains 62 visual containers, 44 with alt text and 18 text boxes. The report locale is `en-US`.
+- The final PBIX and its then-duplicate were byte-identical (`cmp`) with the same SHA-256, and the file passes a zip integrity test. The package contains 62 visual containers, 44 with alt text and 18 text boxes. The report locale is `en-US`.
 - The saved final file was opened from disk in Power BI Desktop. All four pages rendered without errors or dialogs. Page 4 shows "p < 0.001" and the forecast note. Power BI was closed with "Don't save", and the file hash was unchanged afterwards.
 - The Mann–Whitney test was re-run from the raw CSV files with pandas and SciPy 1.15.3 (see "p-value note").
 - These figures were recomputed from `data/raw` and `data/processed`: 96,478 delivered orders; 96,470 of them with a delivery date; 7,826 late orders (8.11 % of 96,470); 93,358 customers by `customer_unique_id`, of whom 2,801 are repeat customers (3.00 %); a 28-day forecast total of 6,660 (sum of daily lower bounds 3,585, sum of daily upper bounds 9,943); 8 delivered orders without a delivery date, all 8 with a review.
@@ -143,4 +138,23 @@ A final closure pass checked the notebooks by running them.
 - **Notebooks 03 and 04:** executed top to bottom without errors. Their source cells are identical to the committed ones, and the printed text outputs are identical to the previously saved ones, apart from log timestamps: n = 7,661 / 88,163, U = 150,706,850.5, the 54.07 % / 9.22 % shares, WAPE 0.2308 and 0.2310, bias -10.14 and +2.44, a forecast of 6,660 and summed daily bounds of 3,585-9,943. This time Holt-Winters reproduced exactly (the earlier pandas rebuild had differed by about 0.0002 in WAPE). The executed copies are the ones now committed, replacing outputs that had been edited by hand earlier in the documentation pass.
 - **Saved results:** `python -m src.run_analysis` regenerated all 18 SQL output files, and the executed notebook 04 regenerated `forecast_28d.csv`. All 19 files match the committed versions byte for byte once line endings are ignored.
 - **Derived figures quoted in the notebook text** (tie-corrected z of about -91, untied z of about -80.5, effect size 77.7 % and 0.55, residual quantiles -109.8 and +117.3, fold total misses from -2,363 to +731) were recomputed on the rebuilt database and match.
-- **Not covered:** the Power BI report was not refreshed or reopened in this pass, and nothing was run on the Windows machine or under Python 3.12. Notebooks 01 and 02 were not re-executed here.
+- **Not covered:** the Power BI report was not refreshed or reopened in this pass, and nothing was run on the Windows machine or under Python 3.12. Notebooks 01 and 02 were executed later, in the release pass below.
+
+## Release verification record
+The final release pass repeated the checks in a throwaway PostgreSQL 16.2 database outside the repository (Linux, Python 3.10.12, the pinned libraries, the raw CSV files in `data/raw`; no Kaggle download). Each line says what was done and whether it passed.
+
+| Check | Result |
+|---|---|
+| `python -m src.run_pipeline` (ingest, input checks, transform, output checks) | **Pass.** 0 blocking failures |
+| `pytest` (10 tests) | **Pass.** 10 passed |
+| `python -m src.run_analysis` (18 SQL outputs) and `forecast_28d.csv` | **Pass.** Identical to the committed files once line endings are ignored |
+| Dashboard views (`vw_sales`, `vw_orders`, `vw_customers`, `vw_daily_orders`) | **Pass.** 110,197, 96,478, 93,358 and 634 rows. Line revenue sums to R$15,419,773.75, with 7,826 late of 96,478 delivered orders and 2,801 repeat of 93,358 customers |
+| Notebooks 01 to 04 executed top to bottom | **Pass.** Source cells identical, printed outputs identical apart from timestamps. Only 03 and 04 outputs were replaced in the repository (closure pass); 01 and 02 already matched |
+| Derived figures quoted in notebook text (z, effect size, residual quantiles, fold misses) | **Pass.** Recomputed independently |
+| `exec_summary.xlsx` rebuilt with `make excel` logic | **Pass with a note.** The pivot sheets are identical. The "Raw Extract" sheet takes the first 5,000 rows of an unordered query (`src/build_excel_summary.py`), so its row selection can differ between runs. It is a sample, not an exact extract. The code was not changed |
+| Final `.pbix` opened in Power BI Desktop | **Pass in the pre-delivery audit.** Not repeated in the release pass, because the file hash is unchanged (`3361bc56...6c32f20`) |
+| Power BI refresh against the Docker database | **Not performed in this pass.** Last refresh was before the 2:18 PM IST save on 9 October 2026 |
+| Docker Compose, md5 authentication and the `make` targets on Windows | **Not performed.** The scratch run used a local PostgreSQL 16.2, not the Docker container |
+| Kaggle download and GitHub Actions CI | **Not performed.** No Kaggle credentials were used and nothing was pushed |
+
+Release cleanup in the same pass: the duplicate `ecommerce_retention_dashboard.pbix` was removed, the superseded dashboard files were moved to `dashboard/archive/` (local only), and stale zero-byte Git lock files, leftover temporary object files and Python and pytest caches were deleted. `docs/BLUEPRINT.md` and `docs/MASTER_DOC.md` stay where they are, as archived design records that other documents cite by section number.
