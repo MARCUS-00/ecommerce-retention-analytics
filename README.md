@@ -1,7 +1,7 @@
 # E-Commerce Revenue & Customer Retention Analytics
 
 [![CI](https://github.com/MARCUS-00/ecommerce-retention-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/MARCUS-00/ecommerce-retention-analytics/actions/workflows/ci.yml)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB.svg?logo=python&logoColor=white)](requirements.txt)
+[![Python 3.11–3.12](https://img.shields.io/badge/python-3.11%E2%80%933.12-3776AB.svg?logo=python&logoColor=white)](requirements.txt)
 [![PostgreSQL 16](https://img.shields.io/badge/postgresql-16-336791.svg?logo=postgresql&logoColor=white)](docker-compose.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational.svg)](LICENSE)
 
@@ -90,14 +90,14 @@ Full detail with source paths in `docs/findings.md`. Summary:
 4. Top 5 of 74 categories generate **39.25%** of delivered revenue.
 5. Items-vs-payments reconciliation: **0.30%** of orders mismatch, fully explained (not an ETL
    error).
-6. RFM: "Champions" (repeat, recent buyers) are 1.29% of customers but 2.51% of revenue; the
+6. RFM: "Champions" (repeat, recent buyers) are 1.29% of customers but 2.52% of revenue; the
    biggest addressable lever is the 38.71%-strong "Recent One-Time" segment.
 7. Walk-forward backtest: the seasonal-naive baseline (**WAPE 0.2308**) was not beaten by
    Holt-Winters (0.2310) - the simple baseline is the recommendation.
 
 ## How to run
 
-**Prerequisites:** Python 3.11+, Docker Desktop, a Kaggle account with
+**Prerequisites:** Python 3.11 or 3.12 (3.12 is the tested version; the pinned scipy 1.13.1 has no prebuilt wheels for 3.13 or newer), Docker Desktop, a Kaggle account with
 `~/.kaggle/kaggle.json` configured, and GNU Make.
 
 - macOS/Linux: `make` is preinstalled or available via your package manager (`apt install

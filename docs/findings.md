@@ -65,10 +65,17 @@ payments received?"
 
 ## 6. RFM segments show a small "Champions" group punching above its weight
 
-"Lapsed One-Time" (58.29% of customers, 55.89% of revenue) and "Recent One-Time" (38.71%,
-38.51%) dominate by construction (97% of customers buy exactly once or twice). "Champions"
-(repeat, recent buyers) are only 1.29% of customers but 2.51% of revenue; "At-Risk Repeat"
-customers are 1.71% of customers and 3.09% of revenue.
+"Lapsed One-Time" (58.29% of customers, 55.88% of revenue) and "Recent One-Time" (38.71%,
+38.51%) dominate by construction (97% of customers buy exactly once). "Champions"
+(repeat, recent buyers) are only 1.29% of customers but 2.52% of revenue; "At-Risk Repeat"
+customers are 1.71% of customers and 3.09% of revenue. These are the figures of
+`sql/03_analysis/15_rfm_segment_share.sql`, which the dashboard imports and notebook 02 reads.
+
+*Precision note:* recency is `NTILE(5)` over the last order date, and customers whose last order
+falls on a quintile-boundary date are split between neighbouring quintiles in an order the
+database does not define. Earlier versions of notebook 02 scored recency with `pandas.qcut` and
+reported 1,201 Champions (2.51% of revenue) and 55.89% for Lapsed One-Time; the dashboard query
+gives 1,204 (2.52%) and 55.88%. Only the second decimal is affected.
 
 **Implication:** the largest addressable lever isn't the tiny existing repeat-buyer pool - it's
 converting the 38.71%-strong "Recent One-Time" segment into second-time buyers, since that pool
