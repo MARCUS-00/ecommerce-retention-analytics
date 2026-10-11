@@ -13,10 +13,10 @@ All files are in `D:\PROGRAMING\Data Analytics\ecommerce retention analytics\cod
 
 | File | Role |
 |---|---|
-| `ecommerce_retention_dashboard_final.pbix` | Authoritative report. 24,195,620 bytes. SHA-256 `3361bc56936996c912274accf7997f527702e6b280161a8e260aa7d8c6c32f20` |
+| `ecommerce_retention_dashboard_final.pbix` | Authoritative report. 24,185,944 bytes. SHA-256 `16a2401e8e88350428442a2b349e397b22b9f647d02b9f2c638f985b51841560` (October 2026 presentation fix; see "Presentation fix, October 2026"). The previous version, SHA-256 `3361bc56936996c912274accf7997f527702e6b280161a8e260aa7d8c6c32f20`, is kept in `archive\` |
 | `BUILD_QA_REPORT.md` | This report |
 | `DAX_MEASURES_FINAL.md` | Final list of the 43 measures and the calculated column |
-| `screenshots\page1_executive_overview.jpg`, `page2_sales_deep_dive.jpg`, `page3_customers_retention.jpg`, `page4_operations_satisfaction.jpg` | Screenshots of the final file, cropped to the report canvas (see Limitations, item 9) |
+| `screenshots\page1_executive_overview.jpg`, `page2_sales_deep_dive.jpg`, `page3_customers_retention.jpg`, `page4_operations_satisfaction.jpg` | The four pages of the final file, exported with File → Export → PDF and cropped to the report canvas (see Limitations, item 9) |
 | `BUILD_SPEC.md`, `dax_measures.md`, `exec_summary.xlsx` | Original project files, unchanged |
 
 Superseded files are kept locally in `archive\` (ignored by Git, described in `archive\README.md`): the pre-polish backup `.pbix` (SHA-256 `8adaca54710ac82347597202ae83ad9c8e826b4525b288827da17ad9550f91db`), an older PBIP development project, a PBIP export of the final report, and the PBIP work copy used for the polish edits. None of them has been checked against the final report, and they are not part of the deliverable. A byte-identical duplicate of the final `.pbix` that used to sit next to it was removed in the release cleanup.
@@ -120,10 +120,10 @@ Not checked against a documented number: median delivery time (10.0 days) and th
 3. The Mann–Whitney statement on page 4 and the "roughly 97 % buy once" box on page 3 are static text, written from notebook 03 and the data at build time. They do not update on refresh.
 4. RFM segment names are derived in DAX from the SQL R×F grid using the notebook 02 rules. SQL `NTILE` places ties at quintile boundaries arbitrarily, so another scoring method can move a few customers between segments (an earlier `pandas.qcut` version of notebook 02 gave 1,201 Champions instead of 1,204). Notebook 02 now reads the same query 15 grid, so its segment table matches the dashboard. Totals reconcile (93,358 customers, R$15,419,773.75).
 5. Repeat Customer Rate is all-time, and the payment visuals and forecast ignore the sales slicers. All three are labelled on the pages.
-6. Digit grouping is stored per file (English US). The model's format strings still apply on a machine with other regional settings, but this was verified only on the author's machine. A later read-only viewing on that machine found the page 1 and page 3 cards showing dots as thousands separators (R$15.419.773.75, 96.478, 93.358) while the page 4 cards show commas (96,478), although all of these measures use `#,0`; the committed screenshots show the same. The cause has not been identified and the report was not changed.
-7. Accessibility is partial. Alt text, reading-order tab order and non-colour cues (data labels, dashed against solid lines) are in place. Contrast was later computed from the stored colours (WCAG 2 formula): #6B7280 grey text is 4.83:1 on the white visual backgrounds but 4.43:1 on the #F3F5F8 page background, just under the 4.5:1 AA threshold for normal text; #5B6472 would give 5.48:1. Dark text (#1F2937, 14.68:1) and navy (#1F3A5F, 11.48:1) pass. Not done: a screen-reader walk-through and a high-contrast theme test.
+6. Digit grouping is stored per file (English US), and the format strings (`#,0`, `\R\$#,0.00`) apply on any regional setting. An earlier version of the page 1 and page 3 KPI cards showed dots instead of commas at some zoom levels (R$15.419.773.75, 96.478); the cause and fix are under "Presentation fix, October 2026".
+7. Accessibility is partial. Alt text, reading-order tab order and non-colour cues (data labels, dashed against solid lines) are in place. Contrast computed from the stored colours (WCAG 2 formula): the subtitles and footnotes that sit directly on the #F3F5F8 page background use #5B6472 (5.48:1, passes AA 4.5:1; until October 2026 they used #6B7280 at 4.43:1); #6B7280 grey on the white visual backgrounds is 4.83:1; dark text (#1F2937, 14.68:1) and navy (#1F3A5F, 11.48:1) pass. Not done: a screen-reader walk-through and a high-contrast theme test.
 8. The page 4 reviewed-orders table is tight, and a thin scrollbar can appear. All five columns and all four rows, including Unknown, are visible. The page 4 cards are compact.
-9. The screenshots are cropped to the report canvas (968 × 608 px); the Power BI Desktop window, side panes and taskbar were removed. The page 1–3 screenshots were captured before the last save, which changed only page 4 wording, so their content matches the final file. Pages 2 and 3 were captured at reduced zoom and are lower in resolution. The uncropped originals are kept locally in `archive\screenshots_original\`.
+9. The four screenshots are File → Export → PDF renders of the saved final report (October 2026 version), rasterised and cropped to the report canvas (1600 px wide). The earlier window captures are kept locally in `archive\screenshots_pre_oct2026_fix\` and `archive\screenshots_original\`.
 10. Pages 2 and 3 use custom page heights (960 and 900). The limit of six analytic visuals per page excludes KPI cards, slicers and text boxes.
 11. The AOV line (page 2) and the late-delivery line (page 4) are drawn in the theme's default blue (#118DFF). The file also stores teal #2A9D8F and coral #E76F51 for them, but as a series-wide fill that line charts do not apply; Power BI Desktop's Format pane shows blue, matching the screenshots.
 12. A saved DAX query tab ("Query 1", the reference-check query) remains in the model. It is harmless.
@@ -153,9 +153,28 @@ The final release pass repeated the checks in a throwaway PostgreSQL 16.2 databa
 | Notebooks 01 to 04 executed top to bottom | **Pass.** Source cells identical, printed outputs identical apart from timestamps. Only 03 and 04 outputs were replaced in the repository (closure pass); 01 and 02 already matched |
 | Derived figures quoted in notebook text (z, effect size, residual quantiles, fold misses) | **Pass.** Recomputed independently |
 | `exec_summary.xlsx` rebuilt with `make excel` logic | **Pass with a note.** The pivot sheets are identical. The "Raw Extract" sheet takes the first 5,000 rows of an unordered query (`src/build_excel_summary.py`), so its row selection can differ between runs. It is a sample, not an exact extract. The code was not changed |
-| Final `.pbix` opened in Power BI Desktop | **Pass in the pre-delivery audit.** Not repeated in the release pass, because the file hash is unchanged (`3361bc56...6c32f20`) |
+| Final `.pbix` opened in Power BI Desktop | **Pass in the pre-delivery audit.** Repeated for the October 2026 version (see below) |
 | Power BI refresh against the Docker database | **Not performed in this pass.** Last refresh was before the 2:18 PM IST save on 9 October 2026 |
 | Docker Compose, md5 authentication and the `make` targets on Windows | **Not performed.** The scratch run used a local PostgreSQL 16.2, not the Docker container |
 | Kaggle download and GitHub Actions CI | **Not performed.** No Kaggle credentials were used and nothing was pushed |
 
 Release cleanup in the same pass: the duplicate `ecommerce_retention_dashboard.pbix` was removed, the superseded dashboard files were moved to `dashboard/archive/` (local only), and stale zero-byte Git lock files, leftover temporary object files and Python and pytest caches were deleted. `docs/BLUEPRINT.md` and `docs/MASTER_DOC.md` stay where they are, as archived design records that other documents cite by section number.
+
+## Presentation fix, October 2026
+**Problem.** On pages 1 and 3 the KPI cards sometimes showed dots where commas belong (R$15.419.773.75, 96.478, 93.358) while the page 4 cards showed commas. It depended on zoom: the same card could show commas at 70 % and dots at 78 % or 110 %.
+
+**Cause.** Not the number format and not the locale. All affected measures use `#,0` or `\R\$#,0.00`, the report locale is en-US, and no card overrides the format. The eight affected cards are 78 px high with the default padding (16 px bottom); the 18 pt value fills that space, so its bottom edge is clipped and each comma loses its tail and looks like a dot. The page 4 cards are 80 px high, which is enough. Setting the cards to 80 px helped in some views but did not survive reopening the file, so it was rejected.
+
+**Fix.** Bottom padding of 8 px on the eight 78 px KPI cards (page 1: Total Revenue, Total Orders, AOV, Revenue MoM Growth; page 3: Customers, Repeat customers, One-time customers, Repeat Customer Rate). Heights, positions, fonts and measures are unchanged. In the same release:
+- the subtitles and footnotes that sit directly on the page background were recoloured from #6B7280 to #5B6472 (seven text boxes: page subtitles on pages 1 to 4 and the footnotes on pages 1 to 3);
+- the page 3 footnote now reads "... Ties at a score boundary are placed arbitrarily. Alternative RFM scoring methods can produce slightly different segment counts. ...". The previous wording pointed at notebook 02, which now reads the same query 15 grid as the report.
+
+**Verification.**
+- Edits were made in Power BI Desktop on a copy of the approved file. After each save the file on disk was checked for a new modification time, size, SHA-256 and a clean zip test.
+- The saved copy was closed, reopened from disk and inspected on all four pages: page 1 and page 3 cards show commas at 70 %, 78 %/80 % and 110 % zoom and after switching pages. Page 2 and page 4 render unchanged.
+- One slicer was checked: customer state AL on page 1 gives R$94,172.49 revenue and R$237.21 AOV, matching the model data.
+- Package comparison with the previous version: only card padding, seven text colours, the page 3 footnote wording and Power BI's automatic schema-version updates differ. All 43 measures (formulas, formats, folders), 8 calculated columns, 2 calculated tables, 3 relationships, 9 Power Query queries, all column settings and every data row in the 11 tables are identical.
+- The rendered subtitle colour in the exported report is RGB 91, 100, 114 (#5B6472).
+- The promoted file was reopened from its final path and the page 1 and page 3 cards and footnote were checked again.
+
+**Not done.** No refresh against the Docker database (the cached data were not changed), only one slicer checked, no screen-reader test.
