@@ -73,5 +73,5 @@ RETURN
 ## Reference values (from the live schema, for build-time sanity checks - not dashboard output)
 
 Computed once against the real local database, `dashboard/BUILD_SPEC.md` has the full list;
-spot values here so a builder can sanity-check the model wires up correctly:
+spot values here to sanity-check that the model is wired up correctly:
 `Total Revenue` ≈ 15,419,773.75 · `Late Delivery %` ≈ 8.1% · `Repeat Cust %` ≈ 3.0%.

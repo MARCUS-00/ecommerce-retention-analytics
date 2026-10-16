@@ -1,7 +1,7 @@
 """Build the one Excel pivot deliverable (MASTER_DOC section 4.1/15): a processed extract
 from analytics.vw_sales, plus pivot-table summaries computed from it (category x month
-revenue, state summary) - the same result a fresher would get importing the extract into
-Excel and building a PivotTable by hand, computed here via pandas.pivot_table instead.
+revenue, state summary) - the same result as importing the extract into Excel and building a
+PivotTable by hand, computed here via pandas.pivot_table instead.
 """
 
 from pathlib import Path

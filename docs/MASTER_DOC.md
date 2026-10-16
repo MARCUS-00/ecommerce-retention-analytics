@@ -6,17 +6,17 @@ E-Commerce Revenue & Customer Retention Analytics
 
 | **Field**               | **Value**                                                                       |
 |-------------------------|---------------------------------------------------------------------------------|
-| Document role           | Single source of truth for development (supersedes conflicting Blueprint lines) |
-| Authoritative baseline  | Built from the locked Blueprint v2 scope; this document is now authoritative in full (docs/BLUEPRINT.md is a trimmed archive) |
+| Document role           | Design specification and planning record for the build |
+| Authoritative baseline  | Built from the original scope plan; authoritative for the design (see the status note below for what was built) |
 | Version / date          | 1.0 - July 2026                                                                 |
-| Owner                   | Manoj (builder, analyst, author of record)                                      |
-| Target outcome          | Shortlist-grade fresher Data Analyst portfolio; interview-defensible end to end |
-| Estimated effort / cost | 5 weeks, ~60 hours / Rs. 0 (all tooling free)                                   |
+| Owner                   | Manoj Kumar                                                                     |
+| Target outcome          | A reproducible, end-to-end analytics project built on public data               |
+| Tooling cost            | None (all tooling free)                                                         |
 
 > **Status note (October 2026).** This is the design specification and planning record, written in July 2026
 > and not rewritten since. The code, notebooks and docs cite it by section number, so the numbering is frozen.
 > It describes the plan, including items that are not in the repository (the optional ladder such as K-Means, Streamlit and
-> dbt; the walkthrough video, LinkedIn post and any Publish-to-web step) and the plan-time dashboard design. For what
+> dbt; the walkthrough video and any Publish-to-web step) and the plan-time dashboard design. For what
 > was actually built and measured, use `README.md`, `docs/findings.md`, `docs/architecture.md`,
 > `docs/monitoring_policy.md`, `docs/PLAYBOOK.md` and, for the finished Power BI report,
 > `dashboard/BUILD_QA_REPORT.md` and `dashboard/DAX_MEASURES_FINAL.md`. Where they disagree on status or results,
@@ -30,15 +30,15 @@ Contents
 
 ## 1. Executive Summary
 
-This project is a production-grade analytics build on real marketplace data (~100K orders, 9 relational tables, Olist / Kaggle): a PostgreSQL staging-plus-star-schema warehouse, a validated and idempotent Python ETL pipeline, 15-25 business-question SQL analyses, a statistically tested operational insight (late delivery vs. review score), a 28-day demand forecast with walk-forward validation and a written monitoring policy, a 4-page Power BI dashboard, and a one-page executive memo. Scope is locked (per the locked Blueprint v2 scope this document was built from); nothing is added until v1 ships.
+This project is a production-grade analytics build on real marketplace data (~100K orders, 9 relational tables, Olist / Kaggle): a PostgreSQL staging-plus-star-schema warehouse, a validated and idempotent Python ETL pipeline, 15-25 business-question SQL analyses, a statistically tested operational insight (late delivery vs. review score), a 28-day demand forecast with walk-forward validation and a written monitoring policy, a 4-page Power BI dashboard, and a one-page executive memo. Scope is locked for v1; nothing is added until the core build ships.
 
-It exists to get a fresher Data Analyst shortlisted and through interviews. Every design choice optimizes for two signals hiring managers screen for: end-to-end workflow competence and business communication. The Definition of Done is mechanical: CI green, clean-room rebuild passes, every published number reproducible from code with a source path, forecast reported against its baseline with bias, and a README a stranger understands in 3 minutes.
+Every design choice optimizes for two things: an end-to-end workflow that can be reproduced from raw data, and clear business communication. The Definition of Done is mechanical: CI green, clean-room rebuild passes, every published number reproducible from code with a source path, forecast reported against its baseline with bias, and a README a stranger understands in 3 minutes.
 
 ## 2. Project Overview
 
-**Deliverables.** A public GitHub repository (pipeline, SQL, executed notebooks, tests, CI badge, docs), a Power BI dashboard (published or screenshots + walkthrough video), a one-page executive insights memo, one Excel pivot summary, and resume bullets whose every number is self-computed.
+**Deliverables.** A public GitHub repository (pipeline, SQL, executed notebooks, tests, CI badge, docs), a Power BI dashboard (published or screenshots + walkthrough video), a one-page executive insights memo, and one Excel pivot summary.
 
-Six differentiators separate this from the typical fresher submission - protect them during development:
+Six design features define the build:
 
 - Real relational data (9 messy tables), not a single clean CSV.
 
@@ -82,18 +82,18 @@ Framing (use verbatim in the README): Olist is a Brazilian e-commerce marketplac
 
 - Documentation: README, data dictionary + anomaly log, findings.md, architecture.md, monitoring_policy.md, one-page insights memo.
 
-- Publication: pinned GitHub repo, dashboard link or screenshots + video, LinkedIn post, resume bullets.
+- Publication: GitHub repository with dashboard screenshots and the report file.
 
 ### 4.2 Optional ladder (only after core ships, in this order)
 
-1\) K-Means segmentation benchmarked against rule-based RFM. 2) Power BI Decomposition Tree on the revenue page. 3) Streamlit demo. 4) dbt refactor of transforms. 5) Logistic-regression driver analysis (late delivery to repeat purchase). None of these appear on the resume unless actually built and defensible.
+1\) K-Means segmentation benchmarked against rule-based RFM. 2) Power BI Decomposition Tree on the revenue page. 3) Streamlit demo. 4) dbt refactor of transforms. 5) Logistic-regression driver analysis (late delivery to repeat purchase). None of these is claimed unless it is actually built.
 
-### 4.3 Rejected register (do not add; each has an interview-ready reason)
+### 4.3 Rejected register (not added; each has a stated reason)
 
 | **Rejected item**                                     | **One-line reason**                                                                                                   |
 |-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | Automatically generated summaries / insights          | Every statement in the memo must trace to a query or notebook; generated text risks unsupported numbers |
-| Text-to-SQL / chat-with-data bot                      | App engineering, not analysis; quality undefendable in a DA interview                                                 |
+| Text-to-SQL / chat-with-data bot                      | App engineering, not analysis; hard to validate as analysis                                                 |
 | Model-monitoring dashboard                            | Nothing is deployed; backtest chart + written policy achieves the legitimate goal at a fraction of the cost           |
 | Orchestrators (Airflow/Prefect/Dagster)               | One-machine batch job; Makefile is the right scale - know when orchestration earns its keep                           |
 | Great Expectations / DQ frameworks                    | Hand-rolled pytest shows deeper understanding here; frameworks add config surface                                     |
@@ -132,22 +132,22 @@ Framing (use verbatim in the README): Olist is a Brazilian e-commerce marketplac
 >
 > +--\> sql/04_dashboard_views/ -\> Power BI (4 pages) -\> executive memo
 
-Principles: (1) staging/analytics separation mirrors real analytics teams and gives interview vocabulary; (2) every script is idempotent and re-runnable; (3) computation lives in SQL, presentation in the BI layer; (4) two environments only - local (Docker Postgres, real data) and CI (GitHub Actions service Postgres, synthetic fixtures).
+Principles: (1) staging/analytics separation mirrors real analytics teams and uses standard warehouse terms; (2) every script is idempotent and re-runnable; (3) computation lives in SQL, presentation in the BI layer; (4) two environments only - local (Docker Postgres, real data) and CI (GitHub Actions service Postgres, synthetic fixtures).
 
 ## 6. Technology Stack & Justification
 
 | **Layer**   | **Choice**                                   | **Why / alternative considered / why preferred**                                                                                                                                                 |
 |-------------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Database    | PostgreSQL 16 (Docker)                       | Window functions + CTEs are exactly what SQL interviews test. Alt: MySQL/SQLite (weaker analytics surface), cloud DW (setup cost, zero added signal). Postgres is free, local, industry-current. |
-| Language    | Python 3.11+ (pinned)                        | pandas, SQLAlchemy, psycopg2-binary, scipy, statsmodels, matplotlib. Alt: R - viable, but Python dominates Indian analyst JDs and the builder's stack.                                           |
-| BI          | Power BI Desktop (free)                      | Leads Indian analyst postings; DAX is a screening topic. Alt: Tableau Public - use it if not on Windows (Power BI Desktop is Windows-only) and say so in the README.                             |
-| Spreadsheet | Excel (one deliverable)                      | Still explicitly listed in most fresher JDs; a pivot summary costs ~2 hours and checks the box.                                                                                                  |
-| VCS / CI    | Git + GitHub + Actions                       | The repo IS the portfolio; CI on data-quality tests is core scope (promoted in v2 - builder already knows Actions).                                                                              |
+| Database    | PostgreSQL 16 (Docker)                       | Strong window-function and CTE support, which the analyses rely on. Alt: MySQL/SQLite (weaker analytics surface), cloud DW (setup cost, no added benefit here). Postgres is free, local, industry-current. |
+| Language    | Python 3.11-3.12 (pinned)                    | pandas, SQLAlchemy, psycopg2-binary, scipy, statsmodels, matplotlib. Alt: R - viable, but Python is the more common choice for this kind of pipeline.                                           |
+| BI          | Power BI Desktop (free)                      | Widely used for business reporting, and DAX provides a measure layer. Alt: Tableau Public (Power BI Desktop is Windows-only).                             |
+| Spreadsheet | Excel (one deliverable)                      | Widely used by business stakeholders; a pivot summary is a small, useful addition.                                                                                                  |
+| VCS / CI    | Git + GitHub + Actions                       | CI on the data-quality tests is core scope.                                                                              |
 | Excluded    | dbt, GE, orchestrators, Spark, ML frameworks | See rejected register (Section 4.3). Exclusions are deliberate and defensible - that is the point.                                                                                               |
 
 ## 7. Project Folder Structure
 
-Canonical tree (harmonized; supersedes minor Blueprint variations):
+Planned tree (the built repository's layout is in README.md):
 
 > ecommerce-retention-analytics/
 >
@@ -175,7 +175,7 @@ Canonical tree (harmonized; supersedes minor Blueprint variations):
 >
 > \|- dashboard/BUILD_SPEC.md dax_measures.md exec_summary.xlsx screenshots/
 >
-> \|- docs/BLUEPRINT.md architecture.md data_dictionary.md findings.md
+> \|- docs/architecture.md data_dictionary.md findings.md
 >
 > \| insights_memo.md monitoring_policy.md
 >
@@ -220,7 +220,7 @@ Two schemas: stg (verbatim TEXT mirror of the 9 CSVs) and analytics (typed star 
 | src/run_pipeline.py | Orchestrate         | ingest -\> validate(input) -\> transform -\> validate(output); single entry point behind make pipeline                                                                            |
 | src/utils.py        | Shared              | get_engine() from .env (python-dotenv), logger factory                                                                                                                            |
 
-**Properties (name these in the README - each is an interview talking point).** Idempotent: any step re-runs safely (drop-and-recreate staging; rebuildable analytics). Validated: pipeline fails loudly, never ships silently wrong tables. Logged: counts at every stage via the logging module. Configured: credentials only in .env (gitignored); .env.example committed. Tradeoff noted: to_sql is simple but slow; Postgres COPY is ~10x faster - simplicity chosen at ~1M rows, faster path known.
+**Properties.** Idempotent: any step re-runs safely (drop-and-recreate staging; rebuildable analytics). Validated: pipeline fails loudly, never ships silently wrong tables. Logged: counts at every stage via the logging module. Configured: credentials only in .env (gitignored); .env.example committed. Tradeoff noted: to_sql is simple but slow; Postgres COPY is ~10x faster - simplicity chosen at ~1M rows, faster path known.
 
 ## 10. Data Validation & Data Quality Strategy
 
@@ -243,7 +243,7 @@ Two schemas: stg (verbatim TEXT mirror of the 9 CSVs) and analytics (typed star 
 
 - Revenue tie-out: total item revenue (staging) equals fact_order_items total; items-vs-payments mismatch quantified and explained (Section 11, query D).
 
-**Severity policy.** Blocking = pipeline exits non-zero and CI fails. Logged = recorded in the anomaly log with counts and a handling decision. Anomaly log format (in data_dictionary.md): date \| table \| check \| count \| decision. Never silently drop or fix data; the anomalies are interview gold.
+**Severity policy.** Blocking = pipeline exits non-zero and CI fails. Logged = recorded in the anomaly log with counts and a handling decision. Anomaly log format (in data_dictionary.md): date \| table \| check \| count \| decision. Never silently drop or fix data.
 
 ## 11. SQL Implementation Plan
 
@@ -409,13 +409,13 @@ Quantify the mismatch rate, explain causes found (vouchers, installments, cancel
 | notebooks/01-03       | EDA + stable-window derivation; cohorts/RFM heatmaps; Mann-Whitney test                         | Read from analytics only; restart-and-run-all before commit; executed via jupyter nbconvert --to notebook --execute --inplace |
 | notebooks/04          | Forecast (Section 14)                                                                           | Only notebook with a declared side effect: writes analytics.forecast_28d + CSV                                                |
 
-Division of labor (defend this in interviews): aggregation and modeling live in SQL (auditable, portable); Python handles statistics, reshaping, and time series. Do not re-implement SQL work in pandas.
+Division of labor: aggregation and modeling live in SQL (auditable, portable); Python handles statistics, reshaping, and time series. Do not re-implement SQL work in pandas.
 
 ## 13. Statistical Analysis Plan
 
 **Question.** Do late deliveries receive lower review scores than on-time deliveries? H0: the score distributions do not differ; H1 (one-sided): late scores are stochastically lower.
 
-**Test.** Mann-Whitney U (scipy.stats.mannwhitneyu, alternative='less'), alpha = 0.05. Why not a t-test: scores are ordinal (1-5) and heavily skewed; comparing means assumes an interval scale and near-normality - the textbook-wrong choice an interviewer will probe.
+**Test.** Mann-Whitney U (scipy.stats.mannwhitneyu, alternative='less'), alpha = 0.05. Why not a t-test: scores are ordinal (1-5) and heavily skewed; comparing means assumes an interval scale and near-normality.
 
 **Reporting standard.** p-value PLUS group medians PLUS share of 1-2 star reviews per group. With n in the tens of thousands, p will be tiny almost regardless - the effect size is the insight, not the p-value. Join uses the deduplicated one-review-per-order table (Section 8) so orders are not double-counted.
 
@@ -471,7 +471,7 @@ Core DAX (measures reference feeding views)
 >
 > DISTINCTCOUNT ( vw_customers\[customer_unique_id\] ) )
 
-KPI contract (definitions are exact; vague KPIs fail interviews)
+KPI contract (definitions are exact)
 
 | **KPI**                 | **Definition**                                                  | **Population**      | **Owner** |
 |-------------------------|-----------------------------------------------------------------|---------------------|-----------|
@@ -552,13 +552,13 @@ Phase-gate model: a red gate blocks progress; fix and re-run the full gate.
 | Kaggle download fails / slug changes                                          | Manual download path documented in README; stop-and-verify rule, never guess mirrors               |
 | Power BI service blocked (work-email rule; tenant may disable Publish to web) | Test with university email in Week 1; fallback: screenshots + walkthrough video, or Tableau Public |
 | Power BI Desktop is Windows-only                                              | Non-Windows: build in Tableau Public and state the substitution in the README                      |
-| Dataset quirks (duplicate reviews, payment mismatches, impossible timestamps) | Defined dedup/handling rules + anomaly log; quirks become interview material                       |
+| Dataset quirks (duplicate reviews, payment mismatches, impossible timestamps) | Defined dedup/handling rules + anomaly log; quirks are documented, not hidden                       |
 | Short history limits forecasting                                              | Weekly seasonality on daily data only; limitation stated openly in notebook and README             |
 | Model fails to beat baseline                                                  | Acceptable outcome by design - report the baseline as the recommendation                           |
 | Scope creep                                                                   | Locked register (Section 4.3) + written-reason rule for any change                                 |
 | Schedule slip                                                                 | Cut optional ladder top-down; never cut documentation, validation, or the baseline comparison      |
 
-## 22. Development Roadmap (5 weeks, ~2-2.5 h/day)
+## 22. Development Roadmap (planned: 5 weeks)
 
 | **Week**           | **Build**                                                                                                                                | **Done when**                                                 |
 |--------------------|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
@@ -566,7 +566,7 @@ Phase-gate model: a red gate blocks progress; fix and re-run the full gate.
 | 2 Model + SQL core | Star schema + transforms; input AND output validation green; reconciliation writeup; first ~10 queries                                   | make pipeline rebuilds from a clean DB                        |
 | 3 Analysis         | Remaining queries; notebooks 1-3; draft findings                                                                                         | Every finding has a number and a reproducible source          |
 | 4 Forecast + CI    | Module A + monitoring policy; fixtures + Actions workflow + badge                                                                        | Backtest table exists; verdict vs baseline written; CI green  |
-| 5 Communicate      | Dashboard (incl. forecast band); README + findings; memo; publish; resume + LinkedIn                                             | A stranger understands the project in 3 minutes               |
+| 5 Communicate      | Dashboard (incl. forecast band); README + findings; memo; publish                                             | A stranger understands the project in 3 minutes               |
 
 ## 23. Definition of Done
 
@@ -574,7 +574,7 @@ Phase-gate model: a red gate blocks progress; fix and re-run the full gate.
 
 ☐ Clean-room rebuild passes: make clean && make db-up && make pipeline && pytest -q && make notebooks.
 
-☐ Every number in README / findings / resume bullets carries a source path and reproduces.
+☐ Every number in README / findings carries a source path and reproduces.
 
 ☐ No placeholder brackets anywhere in final documents.
 
@@ -582,11 +582,11 @@ Phase-gate model: a red gate blocks progress; fix and re-run the full gate.
 
 ☐ README passes the 3-minute stranger test; dashboard published or screenshots + video linked.
 
-☐ Scope equals Section 4.1 exactly - no unbuilt claims on the resume.
+☐ Scope equals Section 4.1 exactly - no unbuilt claims in the documentation.
 
-## 24. Interview Highlights
+## 24. Design Questions and Where They Are Answered
 
-Every question below is earned by building this project. Prepare 2-3 minute answers; the pointer says where the material lives.
+The questions below are the ones the build is designed to answer; the pointer says where the material lives.
 
 | **Theme**     | **Questions (answer source)**                                                                                                                                                                                                                                                          |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -594,6 +594,6 @@ Every question below is earned by building this project. Prepare 2-3 minute answ
 | Data quality  | What did the reconciliation show and what revenue definition did you standardize? (S11-D) - blocking vs logged checks? (S10) - how did you handle duplicate reviews? (S8)                                                                                                              |
 | SQL           | What does NTILE do with heavy ties and what did you do about it? (S11-C) - walk through the cohort query (S11-B) - how would you find a slow query? EXPLAIN ANALYZE + indexes (S8)                                                                                                     |
 | Statistics    | Why Mann-Whitney over a t-test? (S13) - why is the p-value not the insight at this sample size? (S13) - what would make the association causal? (S13)                                                                                                                                  |
-| Forecasting   | Why baseline-first? Why WAPE over MAPE? What is bias and your sign convention? (S14) - why never shuffled CV on time series - and the capstone patient-leakage parallel? (S14) - when would you NOT trust this forecast? (S14, S21)                                                    |
+| Forecasting   | Why baseline-first? Why WAPE over MAPE? What is bias and your sign convention? (S14) - why never shuffled CV on time series? (S14) - when would you NOT trust this forecast? (S14, S21)                                                    |
 | Engineering   | How is the pipeline idempotent? (S9) - how would you do daily incremental loads? (deliberate non-feature: full rebuild is correct at this scale) - what breaks at 100M rows? (partitioning, warehouse engines, pre-aggregation) - when do orchestration or dbt earn their keep? (S4.3) |
 | Communication | Walk one insight from question to recommendation (findings.md -\> memo) - why does every memo number trace back to a findings.md entry? (S4.3, S20)                                                                                                                                                                  |

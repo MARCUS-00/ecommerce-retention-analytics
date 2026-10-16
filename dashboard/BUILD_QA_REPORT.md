@@ -158,7 +158,7 @@ The final release pass repeated the checks in a throwaway PostgreSQL 16.2 databa
 | Docker Compose, md5 authentication and the `make` targets on Windows | **Not performed.** The scratch run used a local PostgreSQL 16.2, not the Docker container |
 | Kaggle download and GitHub Actions CI | **Not performed.** No Kaggle credentials were used and nothing was pushed |
 
-Release cleanup in the same pass: the duplicate `ecommerce_retention_dashboard.pbix` was removed, the superseded dashboard files were moved to `dashboard/archive/` (local only), and stale zero-byte Git lock files, leftover temporary object files and Python and pytest caches were deleted. `docs/BLUEPRINT.md` and `docs/MASTER_DOC.md` stay where they are, as archived design records that other documents cite by section number.
+Release cleanup in the same pass: the duplicate `ecommerce_retention_dashboard.pbix` was removed, the superseded dashboard files were moved to `dashboard/archive/` (local only), and stale zero-byte Git lock files, leftover temporary object files and Python and pytest caches were deleted. `docs/MASTER_DOC.md` stays where it is, as the design record that other documents cite by section number. `docs/BLUEPRINT.md`, a trimmed planning extract, was removed from the working tree in the October 2026 release review and remains in Git history.
 
 ## Presentation fix, October 2026
 **Problem.** On pages 1 and 3 the KPI cards sometimes showed dots where commas belong (R$15.419.773.75, 96.478, 93.358) while the page 4 cards showed commas. It depended on zoom: the same card could show commas at 70 % and dots at 78 % or 110 %.
@@ -178,3 +178,20 @@ Release cleanup in the same pass: the duplicate `ecommerce_retention_dashboard.p
 - The promoted file was reopened from its final path and the page 1 and page 3 cards and footnote were checked again.
 
 **Not done.** No refresh against the Docker database (the cached data were not changed), only one slicer checked, no screen-reader test.
+
+## Release verification, October 2026
+Checks run on the release files before publishing. Environment: Linux, Python 3.12.3 with the pinned `requirements.txt` (versions matched exactly, `pip check` clean), PostgreSQL 16.15 in a disposable local cluster, and the nine raw CSV files (SHA-256 identical to the project copies).
+
+**Executed**
+- `src/run_pipeline.py` on the full data: input validation passed with 0 blocking failures and 9 logged anomalies; output validation passed with 0 blocking failures and 1 logged anomaly.
+- `pytest`: 10 passed. `compileall` and `pyflakes` on `src/` and `tests/`: clean.
+- `src/run_analysis.py`: all 18 saved results in `sql/03_analysis/outputs/` were reproduced byte for byte. `src/build_dashboard_views.py` and `src/build_excel_summary.py` ran without errors.
+- Notebooks 01-04 executed top to bottom without errors. Notebook 04 reproduced `data/processed/forecast_28d.csv` byte for byte; seasonal-naive WAPE 0.2308, Holt-Winters WAPE 0.2310 and a 6,660-order forecast. This run printed a Holt-Winters bias of +2.46 against the saved +2.44, the library-numerics difference described above; the saved value is quoted in the documents.
+- KPI reconciliation from the views: revenue R$15,419,773.75; 96,478 delivered orders; AOV R$159.83; 7,826 late orders (8.11%) and 8 without a delivery date; 93,358 customers, 2,801 repeat (3.00%), 90,557 one-time (97.00%); top-5 category share 39.25% of 74 categories; top-10 seller share 12.93%; 103,886 payment records totalling R$16,008,872.12; 7,661 late and 88,163 on-time reviewed orders. Notebook 02 now returns 1,204 Champions (2.52% of revenue) and 55.88% for Lapsed One-Time, matching the dashboard query.
+- The final `.pbix` hash was compared with the approved value (`16a2401e...1560`) and the package passed a zip test (81 entries). A copy re-saved in Power BI Desktop after the last commit (different `DataModel` and `SecurityBindings` parts, identical report layout) was kept in the local archive, and the verified file was restored.
+
+**Not verified in this review**
+- A full run on Windows with Docker Desktop and GNU Make, the Kaggle download, and a Power BI refresh against the Docker database.
+- Power BI Desktop was not reopened on the release copy in this review; the page checks recorded above are from the earlier verification.
+- GitHub Actions results, which are only visible after the push.
+

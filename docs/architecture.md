@@ -30,7 +30,7 @@ is a conventional star: `fact_orders` and `fact_order_items` at the center, `dim
 `dim_products` / `dim_sellers` / `dim_date` around them, `order_payments` and `order_reviews`
 as typed side tables joined at query time (grain doesn't match the order fact 1:1, so they
 aren't dimension-joined facts). This mirrors how real analytics teams separate "raw" from
-"modeled" and gives standard interview vocabulary (staging layer, grain, star schema) - a flat
+"modeled" and uses standard warehouse terms (staging layer, grain, star schema) - a flat
 single table would hide the grain mismatches (one order has many items, many payments,
 sometimes many reviews) that are exactly what makes this dataset non-trivial.
 
