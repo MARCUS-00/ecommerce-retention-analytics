@@ -216,7 +216,9 @@ data/processed/           forecast_28d.csv
 
 Data: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 (Kaggle; credit Olist). It is not redistributed here; `src/ingest.py` downloads it at run time
-into the gitignored `data/raw/`. See [`LICENSE`](LICENSE) for the dataset licence note and this
-repository's MIT licence for the code.
+into the gitignored `data/raw/`. The dataset is licensed separately by its publisher on Kaggle
+(historically CC BY-NC-SA); check the current licence on the Kaggle page before any commercial use.
+
+Licence: the code in this repository is released under the MIT licence ([`LICENSE`](LICENSE)).
 
 Author: Manoj Kumar ([@MARCUS-00](https://github.com/MARCUS-00)).

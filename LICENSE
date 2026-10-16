@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Manoj
+Copyright (c) 2026 Manoj Kumar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-## Dataset attribution
-
-This repository does not redistribute the underlying dataset. The pipeline
-downloads the "Brazilian E-Commerce Public Dataset by Olist" from Kaggle
-(olistbr/brazilian-ecommerce) at run time into the gitignored `data/raw/`
-directory. That dataset is licensed separately by its publisher on Kaggle
-(historically CC BY-NC-SA — verify the current license on the Kaggle dataset
-page before any commercial use). Credit: Olist, via Kaggle.
