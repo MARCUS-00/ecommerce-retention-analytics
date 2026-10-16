@@ -6,20 +6,20 @@ the *why* behind any decision, see `docs/architecture.md`; for column-level deta
 `docs/data_dictionary.md`. This playbook only covers *how*.
 
 **Time budget:** ~10-15 min setup (steps 0-3) + ~5-10 min pipeline (step 4) + ~5-15 min tests
-and notebooks (steps 5-6) + 30-60 min for the Power BI build if you do it (step 8, manual,
-optional). **Disk/network:** ~1GB free disk (Postgres image + data + `.venv`), ~50MB Kaggle
+and notebooks (steps 5-6) + 30-60 min to rebuild the Power BI report from the views (step 8,
+optional: the finished report is included). **Disk/network:** ~1GB free disk (Postgres image + data + `.venv`), ~50MB Kaggle
 download, ~500MB if you also install Power BI Desktop.
 
 ## 0. Prerequisites
 
 | Tool | Why | Check |
 |---|---|---|
-| Python 3.11+ (3.12 used to build this repo) | runs the ETL, tests, notebooks | `python --version` |
+| Python 3.11 or 3.12 (3.12 is the tested version) | runs the ETL, tests, notebooks | `python --version` |
 | Docker Desktop | runs Postgres 16 in a container - no local Postgres install needed | Desktop app shows "Engine running" |
 | Git | clone the repo | `git --version` |
 | GNU Make | runs every project command via short targets (`make pipeline`, etc.) | `make --version` |
 | A free Kaggle account | the pipeline downloads the dataset from Kaggle at run time | kaggle.com |
-| Power BI Desktop (Windows only, optional) | only needed to build the dashboard (step 8) | Microsoft Store |
+| Power BI Desktop (Windows only, optional) | only needed to open or rebuild the dashboard (step 8) | Microsoft Store |
 
 **Installing `make` on Windows** (not bundled with Windows or Git for Windows):
 - [Scoop](https://scoop.sh/) (no elevated terminal needed):
@@ -163,14 +163,18 @@ make views    # analytics.vw_sales / vw_orders / vw_customers / vw_daily_orders
 make excel    # dashboard/exec_summary.xlsx - pivot-table summary for non-technical readers
 ```
 
-## 8. Build the Power BI dashboard (Windows, optional)
+## 8. Open or rebuild the Power BI dashboard (Windows, optional)
 
 **Status:** the dashboard is already built: `dashboard/ecommerce_retention_dashboard_final.pbix`
 (it is the only current report file). The final model has a few more
 tables than the six listed below (`order_payments`, `cohort_retention`, `rfm_grid`,
 `forecast_chart`) and extra measures; `dashboard/DAX_MEASURES_FINAL.md` and
-`dashboard/BUILD_QA_REPORT.md` describe it. The steps below are the short version for building a
-dashboard from the views again.
+`dashboard/BUILD_QA_REPORT.md` describe it.
+
+To open it, start the Docker database (`make db-up`), open the `.pbix` in Power BI Desktop and
+enter the database password from `.env` when prompted. The page-by-page rebuild procedure is
+`docs/guides/OLIST_PROJECT_SETUP_AND_POWER_BI_REBUILD_GUIDE.pdf`; the steps below are only the
+short outline for building a dashboard from the views again.
 
 Full detail in `dashboard/BUILD_SPEC.md` and the DAX formulas in `dashboard/dax_measures.md` -
 this section is the short version with the two mistakes worth avoiding called out explicitly.
@@ -205,9 +209,8 @@ this section is the short version with the two mistakes worth avoiding called ou
    connecting (uncommon on a fresh setup - this project's Postgres already runs with `md5`
    auth for broad BI-tool compatibility, see `docker-compose.yml`), Advanced options -> SSL
    Mode -> disable is safe for this local-only database.
-8. Screenshot each page (`mkdir -p dashboard/screenshots` first) and embed at least the
-   revenue overview in the README's Dashboard section - replaces more about the project for a
-   reader in 5 seconds than any amount of prose.
+8. To refresh the README images, export the report to PDF (File -> Export), then crop each
+   page to the canvas and save it in `dashboard/screenshots/` (the current four are already there).
 
 ## 9. Insights memo
 
@@ -220,8 +223,9 @@ late-delivery month and the state range) and never round a number differently th
 ## 10. Publish (repo owner only)
 
 ```bash
-git add dashboard/ docs/insights_memo.md README.md
-git commit -m "feat: add dashboard, screenshots, and insights memo"
+git status                       # review exactly what changed
+git add <the files you intend to publish>
+git commit -m "<describe the change>"
 git push origin main
 ```
 
