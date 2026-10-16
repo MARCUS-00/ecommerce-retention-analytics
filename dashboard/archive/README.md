@@ -15,6 +15,7 @@ local disk for rollback and history, and none of them has been checked against t
 | `screenshots_original/` | The four page screenshots as first captured, with the full Power BI Desktop window (ribbon, side panes, taskbar). Replaced by cropped versions in `../screenshots/` | Superseded |
 | `ecommerce_retention_dashboard_final_ORIGINAL_3361bc56.pbix` | The approved report before the October 2026 presentation fix (card padding, text colour, page 3 footnote). SHA-256 `3361bc56936996c912274accf7997f527702e6b280161a8e260aa7d8c6c32f20` | Rollback copy only |
 | `screenshots_pre_oct2026_fix/` | The cropped page screenshots that were current until the October 2026 fix | Superseded |
+| `ecommerce_retention_dashboard_final_RESAVED_558b183d.pbix` | A copy of the final report that was re-saved in Power BI Desktop after the last commit. Only the `DataModel` and `SecurityBindings` parts differ from the authoritative file; the report layout is identical. SHA-256 `558b183d8c79877f0444a65597e0ff2c8a829f4ccae40c8e742361a5cd59a0c5` | Not verified; kept as evidence only |
 | `pbip_work_copy/` | The temporary PBIP working copy used to apply the polish edits (it includes the alt-text edits) | Not verified against the final .pbix |
 
 Notes
