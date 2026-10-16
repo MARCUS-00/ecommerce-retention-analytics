@@ -192,6 +192,15 @@ Checks run on the release files before publishing. Environment: Linux, Python 3.
 
 **Not verified in this review**
 - A full run on Windows with Docker Desktop and GNU Make, the Kaggle download, and a Power BI refresh against the Docker database.
-- Power BI Desktop was not reopened on the release copy in this review; the page checks recorded above are from the earlier verification.
-- GitHub Actions results, which are only visible after the push.
+- Slicer interactions beyond the single slicer checked earlier, and a screen-reader test.
+- The Power BI Desktop reopening and the GitHub Actions result, which could only be done after publication, are recorded in the next section.
 
+## Post-publication checks, 16 October 2026
+Run after release commit `972c5f7` was pushed to `origin/main`.
+
+- **GitHub Actions:** the CI workflow run for `972c5f7` completed successfully (synthetic-fixture pipeline and the 10 tests; the notebooks are not part of CI).
+- **Power BI Desktop on Windows:** a disposable copy of the final `.pbix` (same SHA-256 as the repository file) was opened and all four pages were inspected. The page 1 cards showed R$15,419,773.75, 96,478, R$159.83 and -4.1% with no clipped separators. Values on pages 2 to 4 matched this report: top-10 seller share 12.93%; 93,358 customers, 2,801 repeat, 90,557 one-time and a 3.00% repeat rate; month-1 retention 0.48%; late rate 8.11% on 7,826 orders; RFM shares as published; and the 6,660-order forecast with the note that summed daily bounds are not a 28-day interval. The copy was closed without saving and its hash was unchanged. No data refresh was run.
+- **Published file:** the `.pbix` downloaded from the public repository has SHA-256 `16a2401e8e88350428442a2b349e397b22b9f647d02b9f2c638f985b51841560`, identical to the local file. The README, its four screenshots and its documentation links were loaded on github.com and resolved.
+- **Report structure:** the saved report has 4 pages, 44 visuals (excluding text boxes) and 18 text boxes, matching the rebuild guide.
+
+**Still not verified:** a full run on Windows with Docker Desktop and GNU Make, the Kaggle download, a refresh against the Docker database, and a screen-reader test.
